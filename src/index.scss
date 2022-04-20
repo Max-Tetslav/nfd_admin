@@ -1,0 +1,68 @@
+@import "./vars.scss";
+
+@font-face {
+  font-family: Roboto;
+  src:
+    url("./assets/fonts/roboto/Roboto.woff2") format("woff2"),
+    url("./assets/fonts/roboto/Roboto.woff") format("woff"),
+    url("./assets/fonts/roboto/Roboto.ttf") format("ttf");
+}
+
+* {
+  box-sizing: border-box;
+  font-family: Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+button {
+  background-color: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  height: auto;
+  left: 0;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  width: auto;
+}
+
+#app-root {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
