@@ -1,0 +1,52 @@
+@import "../../../vars.scss";
+
+.label {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 10.5px;
+  line-height: 12px;
+  letter-spacing: -0.1842px;
+
+  .input {
+    width: 100%;
+    height: 29px;
+    margin-top: 7px;
+    padding: 0 11px;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    background: $white;
+
+    &:focus,
+    &:active {
+      outline: none;
+    }
+  }
+
+  .errorBorder {
+    border: 1px solid $red-primary;
+  }
+
+  .error {
+    position: absolute;
+    left: 11px;
+    bottom: -16px;
+    display: flex;
+    align-items: center;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 11px;
+    letter-spacing: -0.1754px;
+  }
+}
+
+.errorColor {
+  color: $red-primary;
+}
