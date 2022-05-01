@@ -28,12 +28,6 @@
     "format": "stylelint -- --fix \"src/**/*.scss\" && prettier --write \"src/**/*.+(ts{,x})\"",
     "lint": "npm run format && tsc --noEmit && eslint \"src/**/*.ts{,x}\""
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       "defaults",
@@ -57,6 +51,7 @@
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^16.1.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^26.0.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
