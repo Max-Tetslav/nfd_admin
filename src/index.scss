@@ -1,11 +1,44 @@
-@import "./vars.scss";
-
 @font-face {
   font-family: Roboto;
   src:
     url("./assets/fonts/roboto/Roboto.woff2") format("woff2"),
     url("./assets/fonts/roboto/Roboto.woff") format("woff"),
     url("./assets/fonts/roboto/Roboto.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: Helvetica;
+  src:
+    url("./assets/fonts/helvetica/helvetica.woff2") format("woff2"),
+    url("./assets/fonts/helvetica/helvetica.woff") format("woff"),
+    url("./assets/fonts/helvetica/helvetica.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: Poppins;
+  src:
+    url("./assets/fonts/poppins/poppins.woff2") format("woff2"),
+    url("./assets/fonts/poppins/poppins.woff") format("woff"),
+    url("./assets/fonts/poppins/poppins.ttf") format("ttf");
+}
+
+:root {
+  --green-primary: #0ec261;
+  --blue-primary: #007bff;
+  --black-primary: #121212;
+  --red-primary: #c4183c;
+  --white: #fff;
+  --gray: #999;
+  --gray-background: #f5f6f8;
+  --lightgray: #eee;
+  --font-color: #3d5170;
+  --border-color: #becad6;
+  --hover-background: #fbfbfb;
+  --hover-shadow: #e1e5eb;
+  --font-input: #767f9d;
+  --font-copyright: #818ea3;
+  --font-error-code: #cacedb;
+  --font-username: #5a6169;
 }
 
 * {
@@ -23,6 +56,7 @@ body {
     Oxygen,
     Ubuntu,
     Cantarell,
+    Helvetica,
     "Fira Sans",
     "Droid Sans",
     "Helvetica Neue",
@@ -31,13 +65,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
   overflow-x: hidden;
-  background-color: $gray-background;
+  background-color: var(--gray-background);
 }
 
 button {
   background-color: inherit;
   border: none;
   cursor: pointer;
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
 }
 
 code {
