@@ -1,0 +1,71 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 34px;
+
+  .textContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+
+    .code {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 75px;
+      line-height: 88px;
+      letter-spacing: -5.7692px;
+      color: var(--font-error-code);
+    }
+
+    .errorText {
+      font-family: Helvetica, sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 50px;
+      line-height: 57px;
+      letter-spacing: -2.5px;
+      color: var(--font-color);
+    }
+
+    .tryAgainText {
+      font-family: Helvetica, sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 23px;
+      letter-spacing: -0.5px;
+      color: var(--font-copyright);
+    }
+  }
+
+  .button {
+    width: 95px;
+    height: 29px;
+    padding: 7px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    letter-spacing: -0.3457px;
+    color: var(--white);
+    background-color: var(--blue-primary);
+
+    &:hover {
+      outline: none;
+    }
+
+    &:active {
+      outline: none;
+    }
+  }
+}
