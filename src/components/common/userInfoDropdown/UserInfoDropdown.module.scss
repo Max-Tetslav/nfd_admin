@@ -15,6 +15,11 @@
     background-color: var(--red-primary);
     border-color: var(--red-primary);
   }
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+    top: 136px;
+  }
 }
 
 .opened {

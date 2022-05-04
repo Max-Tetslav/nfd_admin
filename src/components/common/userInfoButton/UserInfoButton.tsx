@@ -12,8 +12,8 @@ const UserInfoButton: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <button className={cl.container} onClick={clickHandler} type="button">
+    <div className={cl.container}>
+      <button className={cl.button} onClick={clickHandler} type="button">
         <img className={cl.avatar} src={avatarIcon} alt="user" />
         <p className={cl.username}>
           Admin

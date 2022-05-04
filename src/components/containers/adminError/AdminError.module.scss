@@ -20,6 +20,14 @@
       line-height: 88px;
       letter-spacing: -5.7692px;
       color: var(--font-error-code);
+
+      @media screen and (max-width: 500px) {
+        font-size: 65px;
+      }
+
+      @media screen and (max-width: 360px) {
+        font-size: 55px;
+      }
     }
 
     .errorText {
@@ -30,6 +38,14 @@
       line-height: 57px;
       letter-spacing: -2.5px;
       color: var(--font-color);
+
+      @media screen and (max-width: 500px) {
+        font-size: 40px;
+      }
+
+      @media screen and (max-width: 360px) {
+        font-size: 30px;
+      }
     }
 
     .tryAgainText {
@@ -40,6 +56,14 @@
       line-height: 23px;
       letter-spacing: -0.5px;
       color: var(--font-copyright);
+
+      @media screen and (max-width: 500px) {
+        font-size: 16px;
+      }
+
+      @media screen and (max-width: 360px) {
+        font-size: 13px;
+      }
     }
   }
 

@@ -7,6 +7,10 @@
   border-left: 1px solid var(--gray-background);
   cursor: pointer;
 
+  @media screen and (max-width: 500px) {
+    border-top: 1px solid var(--gray-background);
+  }
+
   &:hover,
   &:active,
   &:focus {

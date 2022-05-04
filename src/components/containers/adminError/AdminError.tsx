@@ -11,7 +11,7 @@ const AdminError: React.FC<IAdminErrorProps> = ({ code }) => {
     <div className={cl.container}>
       <div className={cl.textContainer}>
         <h2 className={cl.code}>{code}</h2>
-        <p className={cl.errorText}>Что то пошло не так</p>
+        <p className={cl.errorText}>Что-то пошло не так</p>
         <p className={cl.tryAgainText}>Попробуйте перезагрузить страницу</p>
       </div>
       <Button className={cl.button}>Назад</Button>

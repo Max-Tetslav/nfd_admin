@@ -10,16 +10,49 @@
     0 7.5px 11px rgba(90 97 105 / 10%),
     0 3.5px 17.5px rgba(165 182 201 / 10%);
   z-index: 1;
+  transition: all 0.5s ease;
+
+  @media screen and (max-width: 1024px) {
+    position: absolute;
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
 
   .logoContainer {
     width: 100%;
     height: 68px;
     padding: 23px 49px;
     border-bottom: 1px solid var(--gray-background);
+    display: flex;
+    gap: 7px;
 
     .logo {
-      width: 117px;
+      width: 22px;
       height: 22px;
     }
+
+    .logoText {
+      font-family: Helvetica, sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 18px;
+      display: flex;
+      align-items: center;
+      color: var(--font-color);
+    }
   }
+}
+
+.opened {
+  transform: translateX(0);
+  box-shadow:
+    0 1px 75px rgba(90 97 105 / 11%),
+    0 2px 4px rgba(90 97 105 / 12%),
+    0 7.5px 11px rgba(90 97 105 / 10%),
+    0 3.5px 17.5px rgba(165 182 201 / 10%);
 }
