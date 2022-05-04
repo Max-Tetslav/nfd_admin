@@ -1,0 +1,13 @@
+.container {
+  width: 375px;
+  height: 315px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  width: 207px;
+  height: 45px;
+}

@@ -36,6 +36,7 @@
     "@typescript-eslint/no-explicit-any": "error",
     "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }],
     "react/require-default-props": "off",
+    "react/jsx-props-no-spreading": "off",
     "prettier/prettier": [
       "error",
       {
