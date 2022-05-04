@@ -2,19 +2,33 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { Button } from 'antd';
+import { Button, notification } from 'antd';
 import Link from 'antd/lib/typography/Link';
 import nfdApi from '@services/api';
 import { useAppDispatch } from '@store/store';
 import { setLoginData } from '@store/reducers/auth';
 import { EAuthInputTypes } from '@models/auth';
 import AuthInput from '@components/common/authInput/AuthInput';
+import { errorTitle, errorDescription } from '@utils/constants/auth';
 import cl from './AuthForm.module.scss';
 
 const AuthForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [login, loginResp] = nfdApi.useLoginMutation();
+
+  const openNotificationWithIcon = (mess: string, desc: string) => {
+    notification.error({
+      message: mess,
+      description: desc,
+    });
+  };
+
+  useEffect(() => {
+    if (loginResp.error) {
+      openNotificationWithIcon(errorTitle, errorDescription);
+    }
+  }, [loginResp]);
 
   useEffect(() => {
     if (loginResp.data) {
