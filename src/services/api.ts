@@ -8,6 +8,18 @@ import { IAuthData, IAuthResponse } from '@models/auth';
 import { AUTH_SECRET, APPLICATION_ID } from '@utils/constants/api';
 import getRandomString from '@utils/helpers/getRandomString';
 
+const getAuthToken = (): string => {
+  if (!localStorage.getItem('authToken')) {
+    const authToken = `${window.btoa(`${getRandomString(7)}:${AUTH_SECRET}`)}`;
+
+    localStorage.setItem('authToken', authToken);
+
+    return authToken;
+  }
+
+  return localStorage.getItem('authToken') as string;
+};
+
 const nfdApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
@@ -37,7 +49,7 @@ const nfdApi = createApi({
         method: 'POST',
         body: userData,
         headers: {
-          authorization: `Basic ${localStorage.getItem('authToken')}`,
+          authorization: `Basic ${getAuthToken()}`,
         },
       }),
     }),
