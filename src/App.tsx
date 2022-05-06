@@ -3,8 +3,8 @@ import { Provider } from 'react-redux';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import { store } from '@store/store';
 import AuthPage from '@views/authPage/AuthPage';
+import AdminPage from '@views/adminPage/AdminPage';
 import RequireAuth from '@components/common/requireAuth/RequireAuth';
-import OrdersContent from '@components/containers/ordersContent/OrdersContent';
 
 const App: React.FC = () => {
   return (
@@ -16,7 +16,7 @@ const App: React.FC = () => {
             path="/admin/orders"
             element={
               <RequireAuth>
-                <OrdersContent />
+                <AdminPage />
               </RequireAuth>
             }
           />
