@@ -1,0 +1,31 @@
+.container {
+  width: 100%;
+  height: 58px;
+  padding-left: 26px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  list-style: none;
+  border-bottom: 1px solid var(--gray-background);
+  cursor: pointer;
+
+  &:hover,
+  &:active,
+  &:focus {
+    color: var(--blue-primary);
+    background: var(--hover-background);
+    box-shadow: inset 0 -1px 0 var(--hover-shadow), inset 4px 0 0 var(--blue-primary);
+  }
+
+  .text {
+    font-family: Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 17px;
+    letter-spacing: -0.2343px;
+    text-align: left;
+    text-decoration: none;
+    color: var(--font-color);
+  }
+}
