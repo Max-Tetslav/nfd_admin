@@ -79,6 +79,11 @@ const nfdApi = createApi({
         url: '/auth/check',
       }),
     }),
+    getOrderStatus: build.query({
+      query: () => ({
+        url: '/db/orderStatu',
+      }),
+    }),
   }),
 });
 
