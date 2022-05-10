@@ -1,0 +1,12 @@
+.container {
+  height: 100%;
+  border-top: 1px solid var(--gray-background);
+  border-bottom: 1px solid var(--gray-background);
+  overflow: auto;
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.loaded {
+  opacity: 1;
+}
