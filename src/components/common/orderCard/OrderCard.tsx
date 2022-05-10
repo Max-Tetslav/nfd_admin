@@ -46,14 +46,18 @@ const OrderCard: React.FC<IOrderCardProps> = ({
           <strong>{city}</strong>
           {`, ${address}`}
         </p>
-        <p className={cl.dates}>{`${formatDate(dateFrom)} - ${formatDate(dateTo)}`}</p>
+        <p className={cl.dates}>
+          {`${formatDate(dateFrom)} - ${formatDate(dateTo)}`}
+        </p>
         <p className={cl.colorText}>
           {'Цвет: '}
           <strong>{color}</strong>
         </p>
       </div>
       <OrderCheckList tank={tank} chair={chair} wheel={wheel} />
-      <div className={cl.priceBox}>{`${formatPrice(price)} ₽`}</div>
+      <div className={cl.priceBox}>
+        {`${formatPrice(price)} ₽`}
+      </div>
       <div className={cl.buttonBox}>
         <Button
           className={classNames(cl.button, cl.completeButton)}

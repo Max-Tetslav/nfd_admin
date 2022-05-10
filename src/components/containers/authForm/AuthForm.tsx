@@ -84,6 +84,7 @@ const AuthForm: React.FC = () => {
               className={cl.button}
               htmlType="submit"
               disabled={isSubmitting}
+              type="primary"
             >
               Войти
             </Button>

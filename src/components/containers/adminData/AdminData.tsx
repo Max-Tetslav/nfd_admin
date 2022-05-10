@@ -4,7 +4,7 @@ import AdminError from '../adminError/AdminError';
 import cl from './AdminData.module.scss';
 
 const AdminData: React.FC = () => {
-  const { error } = nfdApi.useGetOrderStatusQuery('');
+  const { error } = nfdApi.useGetOrderListQuery('');
 
   return (
     <div className={cl.container}>
