@@ -7,6 +7,7 @@ import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions
 import { IAuthData, IAuthResponse } from '@models/auth';
 import { AUTH_SECRET, APPLICATION_ID } from '@utils/constants/api';
 import getRandomString from '@utils/helpers/getRandomString';
+import axios from 'axios';
 
 const getAuthToken = (): string => {
   if (!localStorage.getItem('authToken')) {
@@ -20,6 +21,25 @@ const getAuthToken = (): string => {
   return localStorage.getItem('authToken') as string;
 };
 
+const api = axios.create({
+  baseURL: 'https://api-factory.simbirsoft1.com/api/',
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+    'Access-Control-Allow-Headers':
+      'x-requested-with, Content-Type, Origin, Authorization, accept, X-api-factory-application-id',
+    'X-Api-Factory-Application-Id': APPLICATION_ID as string,
+  },
+});
+
+export const getOrders = () =>
+  api.get('db/order?limit=3000&page=0', {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    },
+  });
+
 const nfdApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
@@ -27,16 +47,6 @@ const nfdApi = createApi({
     prepareHeaders: (headers) => {
       if (APPLICATION_ID) {
         headers.set('X-Api-Factory-Application-Id', APPLICATION_ID);
-      }
-
-      if (AUTH_SECRET) {
-        if (!localStorage.getItem('authToken')) {
-          const authToken = `${window.btoa(
-            `${getRandomString(7)}:${AUTH_SECRET}`,
-          )}`;
-
-          localStorage.setItem('authToken', authToken);
-        }
       }
 
       return headers;
@@ -79,9 +89,17 @@ const nfdApi = createApi({
         url: '/auth/check',
       }),
     }),
-    getOrderStatus: build.query({
+    getOrderList: build.query({
       query: () => ({
-        url: '/db/orderStatu',
+        url: '/db/order',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': 'true',
+          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+          'Access-Control-Allow-Headers':
+            'x-requested-with, Content-Type, Origin, Authorization, accept, X-api-factory-application-id',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
       }),
     }),
   }),
