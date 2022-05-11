@@ -109,3 +109,56 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   display: flex;
   flex-direction: column;
 }
+
+/* stylelint-disable */
+
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: var(--gray);
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-radius: 4px;
+}
+
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  height: 100%;
+}
+
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  box-shadow: none;
+  border-color: var(--gray);
+}
+
+.ant-pagination-item,
+.ant-pagination-next,
+.ant-pagination-prev,
+.ant-pagination-jump-next,
+.ant-pagination-jump-prev {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  min-width: 18px;
+  min-height: 18px;
+
+  button {
+    height: 18px;
+    font-family: Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 17px;
+    letter-spacing: -0.4714px;
+    color: var(--blue-primary);
+    border-radius: 50%;
+  }
+}
+
+.ant-pagination-item-active {
+  button {
+    background-color: var(--blue-primary);
+    color: var(--white);
+  }
+}
+
+/* stylelint-enable */

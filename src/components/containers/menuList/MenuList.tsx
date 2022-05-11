@@ -7,7 +7,7 @@ const MenuList: React.FC = () => {
   return (
     <ul className={cl.container}>
       {menuData.map((item) => {
-        return <MenuItem text={item.text} img={item.img} key={item.id} />;
+        return <MenuItem data={item} key={item.id} />;
       })}
     </ul>
   );
