@@ -29,3 +29,9 @@
     color: var(--font-color);
   }
 }
+
+.active {
+  color: var(--blue-primary);
+  background: var(--hover-background);
+  box-shadow: inset 0 -1px 0 var(--hover-shadow), inset 4px 0 0 var(--blue-primary);
+}
