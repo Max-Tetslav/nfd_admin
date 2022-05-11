@@ -24,22 +24,7 @@ const OrdersList: React.FC<IOrderListProps> = ({ orders }) => {
   return (
     <div className={classes}>
       {orders.length > 0
-        ? orders.map((item) => (
-            <OrderCard
-              img={item.carId.thumbnail.path || ''}
-              name={item.carId.name || ''}
-              color={item.color || ''}
-              city={item.pointId.name || ''}
-              address={item.pointId.address || ''}
-              price={item.price}
-              dateFrom={item.dateFrom}
-              dateTo={item.dateTo}
-              tank={item.isFullTank}
-              chair={item.isNeedChildChair}
-              wheel={item.isRightWheel}
-              key={item.id}
-            />
-          ))
+        ? orders.map((item) => <OrderCard order={item} key={item.id} />)
         : null}
     </div>
   );

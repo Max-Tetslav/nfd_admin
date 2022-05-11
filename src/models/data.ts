@@ -57,3 +57,10 @@ export interface IOrderOptionItem {
   status: boolean;
   id: number;
 }
+
+export interface IMenuItem {
+  text: string;
+  page: string;
+  img: string;
+  id: number;
+}
