@@ -7,6 +7,7 @@ import cancelIcon from '@assets/svg/cancel.svg';
 import editIcon from '@assets/svg/edit.svg';
 import formatPrice from '@utils/helpers/formatPrice';
 import formatDate from '@utils/helpers/formatDate';
+import { DATA_ERROR_MESSAGE } from '@utils/constants/tables';
 import OrderCheckList from '../orderCheckList/OrderCheckList';
 import cl from './OrderCard.module.scss';
 
@@ -16,6 +17,7 @@ interface IOrderCardProps {
 
 const OrderCard: React.FC<IOrderCardProps> = ({
   order: {
+    cityId,
     dateFrom,
     dateTo,
     color,
@@ -29,13 +31,19 @@ const OrderCard: React.FC<IOrderCardProps> = ({
 }) => {
   return (
     <div className={cl.container}>
-      <img className={cl.img} src={carId.thumbnail.path} alt={carId.name} />
+      <img
+        className={cl.img}
+        src={carId?.thumbnail.path || ''}
+        alt={carId?.name || DATA_ERROR_MESSAGE}
+      />
       <div className={cl.infoBox}>
         <p className={cl.name}>
-          <strong>{carId.name.toLocaleUpperCase()}</strong>
+          <strong>
+            {carId?.name.toLocaleUpperCase() || DATA_ERROR_MESSAGE}
+          </strong>
           {' в '}
-          <strong>{pointId.name}</strong>
-          {`, ${pointId.address}`}
+          <strong>{cityId?.name || pointId?.name || DATA_ERROR_MESSAGE}</strong>
+          {`, ${pointId?.address || DATA_ERROR_MESSAGE}`}
         </p>
         <p className={cl.dates}>
           {`${formatDate(dateFrom)} - ${formatDate(dateTo)}`}
@@ -50,7 +58,7 @@ const OrderCard: React.FC<IOrderCardProps> = ({
         chair={isNeedChildChair}
         wheel={isRightWheel}
       />
-      <div className={cl.priceBox}>{`${formatPrice(price)} ₽`}</div>
+      <div className={cl.priceBox}>{formatPrice(price || 0)}</div>
       <div className={cl.buttonBox}>
         <Button
           className={classNames(cl.button, cl.completeButton)}

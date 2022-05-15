@@ -39,7 +39,7 @@ const AuthForm: React.FC = () => {
         loginResp.data.expires_in.toString(),
       );
       dispatch(setLoginData());
-      navigate('/admin/orders');
+      navigate('/admin/order');
     }
   }, [loginResp]);
 

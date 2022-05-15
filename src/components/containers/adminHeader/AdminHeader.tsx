@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input } from 'antd';
 import searchIcon from '@assets/svg/search.svg';
-import UserBox from '../userBox/UserBox';
+import UserBox from '@components/common/userBox/UserBox';
 import cl from './AdminHeader.module.scss';
 
 const AdminHeader: React.FC = () => {
