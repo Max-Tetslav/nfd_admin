@@ -1,26 +1,85 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import classNames from 'classnames';
-import { periodData, testData } from '@utils/constants/filterData';
 import { Button } from 'antd';
+import useAnimate from '@hooks/useAnimate';
+import { INameAndID } from '@models/data';
+import { ETableTypes } from '@models/app';
+import { useAppDispatch, useAppSelector } from '@store/store';
+import {
+  applyCarFilters,
+  applyOrderFilters,
+  clearCarFilters,
+  clearOrderFilters,
+} from '@store/reducers/filters';
 import FilterListButton from '../filterListButton/FilterListButton';
 import FilterSelect from '../filterSelect/FilterSelect';
 import cl from './FilterList.module.scss';
 
-const FilterList: React.FC = () => {
-  const [isFiltersOpened, setIsFiltersOpened] = useState(false);
+interface IFilterListProps {
+  type: string;
+  categoryList?: INameAndID[];
+  cityList?: INameAndID[];
+  rateList?: INameAndID[];
+  statusList?: INameAndID[];
+}
 
-  const openedHandler = useCallback(() => {
-    setIsFiltersOpened((state) => !state);
-  }, []);
+const FilterList: FC<IFilterListProps> = ({
+  type,
+  categoryList,
+  rateList,
+  cityList,
+  statusList,
+}) => {
+  const dispatch = useAppDispatch();
+  const [isFiltersOpened, setIsFiltersOpened] = useState(false);
+  const carFilterStatus = useAppSelector(
+    (state) => state.filters.car.filterStatus,
+  );
+  const orderFilterStatus = useAppSelector(
+    (state) => state.filters.order.filterStatus,
+  );
 
   const [animate, setAnimate] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAnimate(true);
-    }, 0);
+  useAnimate(setAnimate);
 
-    return () => clearTimeout(timer);
+  const filters = useMemo(() => {
+    switch (type) {
+      case ETableTypes.ORDER:
+        return (
+          <div className={cl.filterBox}>
+            <FilterSelect
+              title="Город"
+              list={cityList as INameAndID[]}
+              type={ETableTypes.CITY}
+            />
+            <FilterSelect
+              title="Тариф"
+              list={rateList as INameAndID[]}
+              type={ETableTypes.RATE}
+            />
+            <FilterSelect
+              title="Статус заказа"
+              list={statusList as INameAndID[]}
+              type={ETableTypes.STATUS}
+            />
+          </div>
+        );
+        break;
+      case ETableTypes.CAR:
+        return (
+          <div className={cl.filterBox}>
+            <FilterSelect
+              title="Категория"
+              list={categoryList as INameAndID[]}
+              type={ETableTypes.CATEGORY}
+            />
+          </div>
+        );
+        break;
+
+      // no default
+    }
   }, []);
 
   const classes = classNames(
@@ -29,22 +88,57 @@ const FilterList: React.FC = () => {
     { [cl.opened]: isFiltersOpened },
   );
 
+  const applyHandler = useCallback(() => {
+    switch (type) {
+      case ETableTypes.ORDER:
+        dispatch(applyOrderFilters());
+        break;
+      case ETableTypes.CAR:
+        dispatch(applyCarFilters());
+        break;
+
+      // no default
+    }
+  }, []);
+
+  const clearHandler = useCallback(() => {
+    switch (type) {
+      case ETableTypes.ORDER:
+        dispatch(clearOrderFilters());
+        break;
+      case ETableTypes.CAR:
+        dispatch(clearCarFilters());
+        break;
+
+      // no default
+    }
+  }, []);
+
+  const getDisableStatus = useMemo(() => {
+    switch (type) {
+      case ETableTypes.ORDER:
+        return !orderFilterStatus;
+        break;
+      case ETableTypes.CAR:
+        return !carFilterStatus;
+        break;
+
+      // no default
+    }
+  }, [carFilterStatus, orderFilterStatus]);
+
   return (
     <>
       <div className={classes}>
-        <div className={cl.filterBox}>
-          <FilterSelect title="Период" list={periodData} />
-          <FilterSelect title="Город" list={testData} />
-          <FilterSelect title="Модель" list={testData} />
-          <FilterSelect title="Статус" list={testData} />
-        </div>
+        {filters}
         <div className={cl.buttonBox}>
           <Button
             className={classNames(cl.button, cl.danger)}
             htmlType="button"
             type="primary"
             danger
-            // disabled={isSubmitting}
+            onClick={clearHandler}
+            disabled={getDisableStatus}
           >
             Отменить
           </Button>
@@ -52,7 +146,7 @@ const FilterList: React.FC = () => {
             className={cl.button}
             htmlType="button"
             type="primary"
-            // disabled={isSubmitting}
+            onClick={applyHandler}
           >
             Применить
           </Button>
@@ -60,7 +154,7 @@ const FilterList: React.FC = () => {
       </div>
       <FilterListButton
         isActive={isFiltersOpened}
-        clickHandler={openedHandler}
+        setIsActive={setIsFiltersOpened}
       />
     </>
   );
