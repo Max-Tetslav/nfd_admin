@@ -1,0 +1,7 @@
+@import "../../../mixins.scss";
+
+.container {
+  /* stylelint-disable */
+  @include adminMain;
+  /* stylelint-enable */
+}
