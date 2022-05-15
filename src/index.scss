@@ -161,4 +161,9 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   }
 }
 
+.ant-table-tbody > tr.ant-table-row:hover > td, .ant-table-tbody > tr > td.ant-table-cell-row-hover,
+.ant-table-thead > tr > th {
+  background: var(--white);
+}
+
 /* stylelint-enable */
