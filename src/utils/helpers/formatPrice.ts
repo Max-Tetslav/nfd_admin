@@ -19,7 +19,7 @@ const formatPrice = (price: number): string => {
     // no default
   }
 
-  return formatedPrice;
+  return `${formatedPrice}  ₽`;
 };
 
 export default formatPrice;

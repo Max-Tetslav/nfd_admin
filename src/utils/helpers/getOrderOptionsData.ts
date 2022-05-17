@@ -1,4 +1,4 @@
-import { IOrderOptionItem } from '@models/data';
+import { IOrderOptionItem } from '@models/app';
 
 const getOrderOptions = (
   tank: boolean,

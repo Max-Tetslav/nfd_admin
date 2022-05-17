@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import classnames from 'classnames';
 import filterIcon from '@assets/svg/filter.svg';
 import cl from './FilterListButton.module.scss';
 
 interface IAsideMenuButtonProps {
   isActive: boolean;
-  clickHandler: () => void;
+  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const FilterListButton: React.FC<IAsideMenuButtonProps> = ({
   isActive,
-  clickHandler,
+  setIsActive,
 }) => {
+  const clickHandler = useCallback(() => {
+    setIsActive((state) => !state);
+  }, []);
+
   return (
     <button
       type="button"

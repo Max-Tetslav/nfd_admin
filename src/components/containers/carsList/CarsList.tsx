@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import useAnimate from '@hooks/useAnimate';
-import { IOrderData } from '@models/data';
-import OrderCard from '@components/common/orderCard/OrderCard';
+import { ICar } from '@models/data';
+import CarCard from '@components/common/carCard/CarCard';
 import NoData from '@components/common/noData/NoData';
-import cl from './OrdersList.module.scss';
+import cl from './CarsList.module.scss';
 
 interface IOrderListProps {
-  orders: IOrderData[];
+  cars: ICar[];
 }
 
-const OrdersList: React.FC<IOrderListProps> = ({ orders }) => {
+const CarsList: React.FC<IOrderListProps> = ({ cars }) => {
   const [animate, setAnimate] = useState(false);
 
   useAnimate(setAnimate);
@@ -19,12 +19,12 @@ const OrdersList: React.FC<IOrderListProps> = ({ orders }) => {
 
   return (
     <div className={classes}>
-      {orders.length === 0 && <NoData />}
-      {orders.length > 0
-        ? orders.map((item) => <OrderCard order={item} key={item.id} />)
+      {cars.length === 0 && <NoData />}
+      {cars.length > 0
+        ? cars.map((item) => <CarCard car={item} key={item.id} />)
         : null}
     </div>
   );
 };
 
-export default OrdersList;
+export default CarsList;

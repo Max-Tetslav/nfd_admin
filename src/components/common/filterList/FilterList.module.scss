@@ -41,6 +41,7 @@
     @media screen and (max-width: 870px) {
       flex-direction: column;
       justify-content: center;
+      align-items: center;
     }
 
     .button {
@@ -68,6 +69,12 @@
 
       &:active {
         outline: none;
+      }
+
+      &:disabled {
+        color: var(--border-color);
+        border-color: var(--border-color);
+        background-color: var(--gray-background);
       }
     }
 
