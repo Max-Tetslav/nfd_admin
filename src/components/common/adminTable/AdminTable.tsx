@@ -123,7 +123,7 @@ const AdminTable: FC<IAdminTableProps> = ({ data, headers, type }) => {
     }
 
     return rightData;
-  }, []);
+  }, [data]);
 
   const classes = classNames(
     cl.container,

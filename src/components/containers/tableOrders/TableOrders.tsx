@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import nfdApi from '@services/api';
-import { INameAndID, IOrderData } from '@models/data';
+import { IOrderData } from '@models/data';
 import { ETableTypes } from '@models/app';
-import { useAppSelector } from '@store/store';
+import { useAppDispatch, useAppSelector } from '@store/store';
+import { updataOrderAllFilters } from '@store/reducers/filters';
 import AdminPagination from '@components/common/adminPagination/AdminPagination';
 import FilterList from '@components/common/filterList/FilterList';
 import Spin from '@components/common/spin/Spin';
@@ -12,15 +13,16 @@ import OrdersList from '../ordersList/OrdersList';
 import cl from './TableOrders.module.scss';
 
 const TableOrders: React.FC = () => {
+  const dispatch = useAppDispatch();
   const stateFilters = useAppSelector((state) => state.filters.order);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isPageLoading, setIsPageLoading] = useState(true);
 
   const [page, setPage] = useState(1);
   const {
     refetch,
     data: orderRequest,
     error,
+    isLoading,
+    isFetching,
   } = nfdApi.useGetOrdersListQuery({
     page: page - 1,
     city: stateFilters.finalList.city,
@@ -28,17 +30,14 @@ const TableOrders: React.FC = () => {
     status: stateFilters.finalList.status,
   });
 
-  const rateRequest = nfdApi.useGetRateListQuery({ page: page - 1, limit: 20 });
-  const cityRequest = nfdApi.useGetCityListQuery({ page: page - 1, limit: 20 });
+  const rateRequest = nfdApi.useGetRateListQuery({ page: 0, limit: 20 });
+  const cityRequest = nfdApi.useGetCityListQuery({ page: 0, limit: 20 });
   const statusRequest = nfdApi.useGetStatusListQuery({
-    page: page - 1,
+    page: 0,
     limit: 20,
   });
 
   const [orders, setOrders] = useState<IOrderData[]>([]);
-  const [rates, setRates] = useState<INameAndID[]>([]);
-  const [cityList, setCityList] = useState<INameAndID[]>([]);
-  const [statusList, setStatusList] = useState<INameAndID[]>([]);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
@@ -56,7 +55,7 @@ const TableOrders: React.FC = () => {
         id: item.rateTypeId?.id || DATA_ERROR_MESSAGE,
       }));
 
-      setRates(filteredRate);
+      dispatch(updataOrderAllFilters({ rate: filteredRate }));
     }
 
     if (cityRequest.data) {
@@ -65,7 +64,7 @@ const TableOrders: React.FC = () => {
         id: item.id,
       }));
 
-      setCityList(filteredRate);
+      dispatch(updataOrderAllFilters({ city: filteredRate }));
     }
 
     if (statusRequest.data) {
@@ -74,45 +73,21 @@ const TableOrders: React.FC = () => {
         id: item.id,
       }));
 
-      setStatusList(filteredRate);
+      dispatch(updataOrderAllFilters({ status: filteredRate }));
     }
   }, [rateRequest, statusRequest, cityRequest]);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-
     if (orderRequest?.data) {
-      timer = setTimeout(() => {
-        setIsLoading(false);
-        setIsPageLoading(false);
-      }, 2000);
-
       setOrders(orderRequest.data);
       setTotal(orderRequest.count);
-    } else if (error) {
-      setIsLoading(false);
-      setIsPageLoading(false);
     }
-
-    return () => clearTimeout(timer);
-  }, [orderRequest, error]);
-
-  // Переключении страниц/фильтров
+  }, [orderRequest]);
 
   useEffect(() => {
-    setIsPageLoading(true);
-
-    let timer: NodeJS.Timeout;
-
     if (orderRequest?.data) {
-      timer = setTimeout(() => {
-        setIsPageLoading(false);
-      }, 2000);
-
       setOrders(orderRequest.data);
     }
-
-    return () => clearTimeout(timer);
   }, [page, stateFilters.finalList]);
 
   const pagination = useMemo(() => {
@@ -139,12 +114,12 @@ const TableOrders: React.FC = () => {
       <>
         <FilterList
           type={ETableTypes.ORDER}
-          rateList={rates}
-          cityList={cityList}
-          statusList={statusList}
+          rateList={stateFilters.all.rate}
+          cityList={stateFilters.all.city}
+          statusList={stateFilters.all.status}
         />
-        {isPageLoading ? (
-          <Spin loading={isPageLoading} />
+        {isFetching ? (
+          <Spin loading={isFetching} />
         ) : (
           <>
             <OrdersList orders={orders} />
@@ -153,7 +128,7 @@ const TableOrders: React.FC = () => {
         )}
       </>
     );
-  }, [isPageLoading, total, error]);
+  }, [isFetching, orders, error]);
 
   return (
     <main className={cl.container}>

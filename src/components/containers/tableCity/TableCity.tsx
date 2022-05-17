@@ -9,11 +9,13 @@ import { NAME_AND_ID_HEADERS } from '@utils/constants/tables';
 import cl from './TableCity.module.scss';
 
 const TableCity: FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isPageLoading, setIsPageLoading] = useState(true);
-
   const [page, setPage] = useState(1);
-  const { data: cityRequest, error } = nfdApi.useGetCityListQuery({
+  const {
+    data: cityRequest,
+    error,
+    isLoading,
+    isFetching,
+  } = nfdApi.useGetCityListQuery({
     page: page - 1,
     limit: 6,
   });
@@ -22,40 +24,16 @@ const TableCity: FC = () => {
   const [totalCity, setTotal] = useState(0);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-
     if (cityRequest?.data) {
-      timer = setTimeout(() => {
-        setIsLoading(false);
-        setIsPageLoading(false);
-      }, 2000);
-
       setCities(cityRequest.data);
       setTotal(cityRequest.count);
-    } else if (error) {
-      setIsLoading(false);
-      setIsPageLoading(false);
     }
-
-    return () => clearTimeout(timer);
   }, [cityRequest]);
 
-  // Переключении страниц
-
   useEffect(() => {
-    setIsPageLoading(true);
-
-    let timer: NodeJS.Timeout;
-
     if (cityRequest?.data) {
-      timer = setTimeout(() => {
-        setIsPageLoading(false);
-      }, 2000);
-
       setCities(cityRequest.data);
     }
-
-    return () => clearTimeout(timer);
   }, [page]);
 
   const pagination = useMemo(() => {
@@ -78,15 +56,15 @@ const TableCity: FC = () => {
       );
     }
 
-    return isPageLoading ? (
-      <Spin loading={isPageLoading} />
+    return isFetching ? (
+      <Spin loading={isFetching} />
     ) : (
       <>
         <AdminTable data={cities} headers={NAME_AND_ID_HEADERS} type="city" />
         {pagination}
       </>
     );
-  }, [isPageLoading, totalCity, error]);
+  }, [isFetching, cities, error]);
 
   return (
     <main className={cl.container}>

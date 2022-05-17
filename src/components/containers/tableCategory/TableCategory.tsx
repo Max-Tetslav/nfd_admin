@@ -9,11 +9,13 @@ import { CATEGORY_HEADERS } from '@utils/constants/tables';
 import cl from './TableCategory.module.scss';
 
 const TableCategory: FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isPageLoading, setIsPageLoading] = useState(true);
-
   const [page, setPage] = useState(1);
-  const { data: categoryRequest, error } = nfdApi.useGetCategoryListQuery({
+  const {
+    data: categoryRequest,
+    error,
+    isLoading,
+    isFetching,
+  } = nfdApi.useGetCategoryListQuery({
     page: page - 1,
     limit: 6,
   });
@@ -22,40 +24,16 @@ const TableCategory: FC = () => {
   const [totalCategory, setTotalCategory] = useState(0);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-
     if (categoryRequest?.data) {
-      timer = setTimeout(() => {
-        setIsLoading(false);
-        setIsPageLoading(false);
-      }, 2000);
-
       setCategories(categoryRequest.data);
       setTotalCategory(categoryRequest.count);
-    } else if (error) {
-      setIsLoading(false);
-      setIsPageLoading(false);
     }
-
-    return () => clearTimeout(timer);
   }, [categoryRequest]);
 
-  // Переключении страниц
-
   useEffect(() => {
-    setIsPageLoading(true);
-
-    let timer: NodeJS.Timeout;
-
     if (categoryRequest?.data) {
-      timer = setTimeout(() => {
-        setIsPageLoading(false);
-      }, 2000);
-
       setCategories(categoryRequest.data);
     }
-
-    return () => clearTimeout(timer);
   }, [page]);
 
   const pagination = useMemo(() => {
@@ -78,8 +56,8 @@ const TableCategory: FC = () => {
       );
     }
 
-    return isPageLoading ? (
-      <Spin loading={isPageLoading} />
+    return isFetching ? (
+      <Spin loading={isFetching} />
     ) : (
       <>
         <AdminTable
@@ -90,7 +68,7 @@ const TableCategory: FC = () => {
         {pagination}
       </>
     );
-  }, [isPageLoading, totalCategory, error]);
+  }, [isFetching, categories, error]);
 
   return (
     <main className={cl.container}>

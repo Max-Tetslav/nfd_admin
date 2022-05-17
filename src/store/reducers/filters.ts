@@ -1,19 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
+  ICarAllFilters,
   ICarFilters,
+  IOrderAllFilters,
   IOrderFilters,
   TCarTempFilterList,
   TOrderTempFilterList,
 } from '@models/store';
+import { INameAndID } from '@models/data';
 
 interface IFiltersInitialState {
   order: {
     filterStatus: boolean;
+    all: IOrderAllFilters;
     tempList: IOrderFilters;
     finalList: IOrderFilters;
   };
   car: {
     filterStatus: boolean;
+    all: ICarAllFilters;
     tempList: ICarFilters;
     finalList: ICarFilters;
   };
@@ -22,6 +27,11 @@ interface IFiltersInitialState {
 const initialState: IFiltersInitialState = {
   order: {
     filterStatus: false,
+    all: {
+      rate: [],
+      status: [],
+      city: [],
+    },
     tempList: {
       city: null,
       rate: null,
@@ -35,6 +45,9 @@ const initialState: IFiltersInitialState = {
   },
   car: {
     filterStatus: false,
+    all: {
+      category: [],
+    },
     tempList: {
       category: null,
     },
@@ -80,6 +93,25 @@ const filterSlice = createSlice({
       state.car.filterStatus = true;
       state.car.finalList = state.car.tempList;
     },
+    updataCarAllFilters: (state, action: PayloadAction<INameAndID[]>) => {
+      state.car.all = { ...state.car.all, category: action.payload };
+    },
+    updataOrderAllFilters: (
+      state,
+      action: PayloadAction<Partial<IOrderAllFilters>>,
+    ) => {
+      if (action.payload.rate) {
+        state.order.all.rate = action.payload.rate;
+      }
+
+      if (action.payload.city) {
+        state.order.all.city = action.payload.city;
+      }
+
+      if (action.payload.status) {
+        state.order.all.status = action.payload.status;
+      }
+    },
   },
 });
 
@@ -90,5 +122,7 @@ export const {
   updateCarFilter,
   clearOrderFilters,
   clearCarFilters,
+  updataCarAllFilters,
+  updataOrderAllFilters,
 } = filterSlice.actions;
 export default filterSlice.reducer;

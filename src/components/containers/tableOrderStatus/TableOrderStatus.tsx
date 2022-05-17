@@ -9,11 +9,13 @@ import { NAME_AND_ID_HEADERS } from '@utils/constants/tables';
 import cl from './TableOrderStatus.module.scss';
 
 const TableOrderStatus: FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isPageLoading, setIsPageLoading] = useState(true);
-
   const [page, setPage] = useState(1);
-  const { data: statusRequest, error } = nfdApi.useGetStatusListQuery({
+  const {
+    data: statusRequest,
+    error,
+    isFetching,
+    isLoading,
+  } = nfdApi.useGetStatusListQuery({
     page: page - 1,
   });
 
@@ -21,37 +23,16 @@ const TableOrderStatus: FC = () => {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-
     if (statusRequest?.data) {
-      timer = setTimeout(() => {
-        setIsLoading(false);
-        setIsPageLoading(false);
-      }, 2000);
       setStatuses(statusRequest.data);
       setTotal(statusRequest.count);
-    } else if (error) {
-      setIsLoading(false);
-      setIsPageLoading(false);
     }
-
-    return () => clearTimeout(timer);
   }, [statusRequest]);
 
   useEffect(() => {
-    setIsPageLoading(true);
-
-    let timer: NodeJS.Timeout;
-
     if (statusRequest?.data) {
-      timer = setTimeout(() => {
-        setIsPageLoading(false);
-      }, 2000);
-
       setStatuses(statusRequest.data);
     }
-
-    return () => clearTimeout(timer);
   }, [page]);
 
   const pagination = useMemo(() => {
@@ -74,15 +55,15 @@ const TableOrderStatus: FC = () => {
       );
     }
 
-    return isPageLoading ? (
-      <Spin loading={isPageLoading} />
+    return isFetching ? (
+      <Spin loading={isFetching} />
     ) : (
       <>
         <AdminTable data={statuses} headers={NAME_AND_ID_HEADERS} type="city" />
         {pagination}
       </>
     );
-  }, [isPageLoading, total, error]);
+  }, [isFetching, statuses, error]);
 
   return (
     <main className={cl.container}>
