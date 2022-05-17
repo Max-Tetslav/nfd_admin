@@ -1,6 +1,7 @@
 import { ITableHeader } from '@models/app';
 
 export const DATA_ERROR_MESSAGE = 'Нет данных';
+export const NO_PHOTO = 'Нет фото';
 
 export const CATEGORY_HEADERS: ITableHeader[] = [
   {

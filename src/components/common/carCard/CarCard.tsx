@@ -5,7 +5,7 @@ import { ICar } from '@models/data';
 import cancelIcon from '@assets/svg/cancel.svg';
 import editIcon from '@assets/svg/edit.svg';
 import formatPrice from '@utils/helpers/formatPrice';
-import { DATA_ERROR_MESSAGE } from '@utils/constants/tables';
+import { DATA_ERROR_MESSAGE, NO_PHOTO } from '@utils/constants/tables';
 import cl from './CarCard.module.scss';
 
 interface ICarCardProps {
@@ -27,7 +27,7 @@ const CarCard: React.FC<ICarCardProps> = ({
   return (
     <div className={cl.container}>
       <p className={cl.model}>{name}</p>
-      <img className={cl.img} src={path} alt={name} />
+      <img className={cl.img} src={path} alt={name || NO_PHOTO} />
       <div className={cl.numberBox}>
         <p className={cl.number}>
           {number

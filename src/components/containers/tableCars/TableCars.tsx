@@ -61,7 +61,7 @@ const TableCars: FC = () => {
     if (carRequest?.data) {
       setCars(carRequest.data);
     }
-  }, [isFetching, page, stateFilters.finalList]);
+  }, [page, stateFilters.finalList]);
 
   const pagination = useMemo(() => {
     return totalCars > 5 ? (
