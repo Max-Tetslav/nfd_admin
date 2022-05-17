@@ -5,9 +5,20 @@ import {
 } from '@reduxjs/toolkit/dist/query/react';
 import { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions';
 import { IAuthData, IAuthResponse } from '@models/auth';
-import { AUTH_SECRET, APPLICATION_ID } from '@utils/constants/api';
+import {
+  ICar,
+  ICarParams,
+  ICategory,
+  INameAndID,
+  IOrderData,
+  IOrderParams,
+  IPageAndLimitParams,
+  IPoint,
+  IRate,
+  IResponse,
+} from '@models/data';
 import getRandomString from '@utils/helpers/getRandomString';
-import axios from 'axios';
+import { AUTH_SECRET, APPLICATION_ID } from '@utils/constants/api';
 
 const getAuthToken = (): string => {
   if (!localStorage.getItem('authToken')) {
@@ -21,25 +32,6 @@ const getAuthToken = (): string => {
   return localStorage.getItem('authToken') as string;
 };
 
-const api = axios.create({
-  baseURL: 'https://api-factory.simbirsoft1.com/api/',
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Credentials': 'true',
-    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-    'Access-Control-Allow-Headers':
-      'x-requested-with, Content-Type, Origin, Authorization, accept, X-api-factory-application-id',
-    'X-Api-Factory-Application-Id': APPLICATION_ID as string,
-  },
-});
-
-export const getOrders = () =>
-  api.get('db/order?limit=3000&page=0', {
-    headers: {
-      authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-    },
-  });
-
 const nfdApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
@@ -48,6 +40,17 @@ const nfdApi = createApi({
       if (APPLICATION_ID) {
         headers.set('X-Api-Factory-Application-Id', APPLICATION_ID);
       }
+
+      headers.set('Access-Control-Allow-Origin', '*');
+      headers.set('Access-Control-Allow-Credentials', 'true');
+      headers.set(
+        'Access-Control-Allow-Methods',
+        'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+      );
+      headers.set(
+        'Access-Control-Allow-Headers',
+        'x-requested-with, Content-Type, Origin, Authorization, accept, X-api-factory-application-id',
+      );
 
       return headers;
     },
@@ -89,15 +92,62 @@ const nfdApi = createApi({
         url: '/auth/check',
       }),
     }),
-    getOrderList: build.query({
-      query: () => ({
-        url: '/db/order',
+    getOrdersList: build.query<IResponse<IOrderData>, IOrderParams>({
+      query: ({ page, city, rate, status }) => ({
+        url: `/db/order?limit=5&page=${page}${city ? `&cityId=${city}` : ''}${
+          rate ? `&rateId=${rate}` : ''
+        }${status ? `&orderStatusId=${status}` : ''}`,
         headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Credentials': 'true',
-          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-          'Access-Control-Allow-Headers':
-            'x-requested-with, Content-Type, Origin, Authorization, accept, X-api-factory-application-id',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }),
+    }),
+    getCarList: build.query<IResponse<ICar>, ICarParams>({
+      query: ({ page, category }) => ({
+        url: `/db/car?limit=5&page=${page}${
+          category ? `&categoryId=${category}` : ''
+        }`,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }),
+    }),
+    getCategoryList: build.query<IResponse<ICategory>, IPageAndLimitParams>({
+      query: ({ page, limit }) => ({
+        url: `/db/category?${limit ? `limit=${limit}&` : ''}page=${page}`,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }),
+    }),
+    getCityList: build.query<IResponse<INameAndID>, IPageAndLimitParams>({
+      query: ({ page, limit }) => ({
+        url: `/db/city?${limit ? `limit=${limit}&` : ''}page=${page}`,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }),
+    }),
+    getPointList: build.query<IResponse<IPoint>, IPageAndLimitParams>({
+      query: ({ page }) => ({
+        url: `/db/point?limit=6&page=${page}`,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }),
+    }),
+    getRateList: build.query<IResponse<IRate>, IPageAndLimitParams>({
+      query: ({ page, limit }) => ({
+        url: `/db/rate?${limit ? `limit=${limit}&` : ''}page=${page}`,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }),
+    }),
+    getStatusList: build.query<IResponse<INameAndID>, IPageAndLimitParams>({
+      query: ({ page, limit }) => ({
+        url: `/db/orderStatus?${limit ? `limit=${limit}&` : ''}page=${page}`,
+        headers: {
           authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       }),

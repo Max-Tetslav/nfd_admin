@@ -1,9 +1,12 @@
 .container {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 34px;
+  opacity: 0;
+  transition: all 0.5s ease;
 
   .textContainer {
     display: flex;
@@ -92,4 +95,8 @@
       outline: none;
     }
   }
+}
+
+.loaded {
+  opacity: 1;
 }

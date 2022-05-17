@@ -1,9 +1,42 @@
+export interface IPageAndLimitParams {
+  page: number;
+  limit?: number;
+}
+
+export interface IResponse<T> {
+  data: Array<T>;
+  count: number;
+}
+
+export interface ICarParams extends IPageAndLimitParams {
+  category: string | null;
+}
+
+export interface IOrderParams extends IPageAndLimitParams {
+  city?: string | null;
+  rate?: string | null;
+  status?: string | null;
+}
+
+export interface INameAndID {
+  name: string;
+  id: string;
+}
+
+export interface ICategory extends INameAndID {
+  description: string;
+}
+
 export interface ICar {
   priceMax: number;
   priceMin: number;
+  colors: string[];
+  description: string;
   name: string;
   number: string;
   tank: number;
+  categoryId: ICategory;
+  id: string;
   thumbnail: {
     mimetype: string;
     originalname: string;
@@ -12,15 +45,11 @@ export interface ICar {
   };
 }
 
-export interface INameAndID {
-  name: string;
-  id: string;
-}
-
 export interface IPoint {
   name: string;
   address: string;
   id: string;
+  cityId: INameAndID;
 }
 
 export interface IRate {
@@ -35,7 +64,7 @@ export interface IRate {
 
 export interface IOrderData {
   carId: ICar;
-  cityId: INameAndID;
+  cityId: INameAndID | null;
   color: string;
   createdAt: number;
   dateFrom: number;
@@ -45,22 +74,8 @@ export interface IOrderData {
   isNeedChildChair: boolean;
   isRightWheel: boolean;
   orderStatusId: INameAndID;
-  pointId: IPoint;
+  pointId: IPoint | null;
   price: number;
   rateId: IRate;
   updatedAt: number;
-}
-
-export interface IOrderOptionItem {
-  name: string;
-  type: string;
-  status: boolean;
-  id: number;
-}
-
-export interface IMenuItem {
-  text: string;
-  page: string;
-  img: string;
-  id: number;
 }

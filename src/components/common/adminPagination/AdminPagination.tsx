@@ -1,9 +1,22 @@
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useState } from 'react';
 import classNames from 'classnames';
 import { Pagination } from 'antd';
+import useAnimate from '@hooks/useAnimate';
 import cl from './AdminPagination.module.scss';
 
-const AdminPagination: React.FC = () => {
+interface IAdminPaginationProps {
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  pageProp: number;
+  total: number;
+  limit: number;
+}
+
+const AdminPagination: React.FC<IAdminPaginationProps> = ({
+  setPage,
+  pageProp,
+  total,
+  limit,
+}) => {
   const itemRender = useCallback(
     (
       page: number,
@@ -55,12 +68,10 @@ const AdminPagination: React.FC = () => {
 
   const [animate, setAnimate] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAnimate(true);
-    }, 0);
+  useAnimate(setAnimate);
 
-    return () => clearTimeout(timer);
+  const paginationHandler = useCallback((pageNum: number) => {
+    setPage(pageNum);
   }, []);
 
   const classes = classNames(cl.container, { [cl.loaded]: animate });
@@ -70,13 +81,12 @@ const AdminPagination: React.FC = () => {
       <Pagination
         className={cl.pagination}
         showSizeChanger={false}
-        defaultCurrent={1}
-        total={200}
-        defaultPageSize={6}
-        current={1}
+        total={total}
+        defaultPageSize={limit}
+        current={pageProp}
         itemRender={itemRender}
         showQuickJumper={false}
-        // onChange={paginationHandler}
+        onChange={paginationHandler}
         responsive
       />
     </div>

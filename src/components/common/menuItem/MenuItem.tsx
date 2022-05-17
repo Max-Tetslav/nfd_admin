@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
-import { IMenuItem } from '@models/data';
+import { IMenuItem } from '@models/app';
 import cl from './MenuItem.module.scss';
 
 interface IMenuItemProps {
@@ -17,9 +17,9 @@ const MenuItem: React.FC<IMenuItemProps> = ({ data: { text, img, page } }) => {
 
   return (
     <li className={classes}>
-      <img className={cl.img} src={img} alt="" />
-      <Link className={cl.text} to={location.pathname}>
-        {text}
+      <Link className={cl.link} to={page}>
+        <img className={cl.img} src={img} alt="" />
+        <span className={cl.text}>{text}</span>
       </Link>
     </li>
   );
