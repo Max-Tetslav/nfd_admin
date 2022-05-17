@@ -13,7 +13,7 @@ const TablePoints: FC = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
 
   const [page, setPage] = useState(1);
-  const { data: request, error } = nfdApi.useGetPointListQuery({
+  const { data: pointRequest, error } = nfdApi.useGetPointListQuery({
     page: page - 1,
   });
 
@@ -23,29 +23,32 @@ const TablePoints: FC = () => {
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
-    if (request?.data) {
+    if (pointRequest?.data) {
       timer = setTimeout(() => {
         setIsLoading(false);
         setIsPageLoading(false);
       }, 2000);
-      setPoints(request.data);
-      setTotal(request.count);
+      setPoints(pointRequest.data);
+      setTotal(pointRequest.count);
+    } else if (error) {
+      setIsLoading(false);
+      setIsPageLoading(false);
     }
 
     return () => clearTimeout(timer);
-  }, [request]);
+  }, [pointRequest]);
 
   useEffect(() => {
     setIsPageLoading(true);
 
     let timer: NodeJS.Timeout;
 
-    if (request?.data) {
+    if (pointRequest?.data) {
       timer = setTimeout(() => {
         setIsPageLoading(false);
       }, 2000);
 
-      setPoints(request.data);
+      setPoints(pointRequest.data);
     }
 
     return () => clearTimeout(timer);

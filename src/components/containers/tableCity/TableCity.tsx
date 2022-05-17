@@ -32,6 +32,9 @@ const TableCity: FC = () => {
 
       setCities(cityRequest.data);
       setTotal(cityRequest.count);
+    } else if (error) {
+      setIsLoading(false);
+      setIsPageLoading(false);
     }
 
     return () => clearTimeout(timer);

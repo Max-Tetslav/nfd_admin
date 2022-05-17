@@ -32,6 +32,9 @@ const TableCategory: FC = () => {
 
       setCategories(categoryRequest.data);
       setTotalCategory(categoryRequest.count);
+    } else if (error) {
+      setIsLoading(false);
+      setIsPageLoading(false);
     }
 
     return () => clearTimeout(timer);

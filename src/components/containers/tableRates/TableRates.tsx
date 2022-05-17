@@ -13,7 +13,7 @@ const TableRates: FC = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
 
   const [page, setPage] = useState(1);
-  const { data: request, error } = nfdApi.useGetRateListQuery({
+  const { data: rateRequest, error } = nfdApi.useGetRateListQuery({
     page: page - 1,
     limit: 6,
   });
@@ -24,30 +24,33 @@ const TableRates: FC = () => {
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
-    if (request?.data) {
+    if (rateRequest?.data) {
       timer = setTimeout(() => {
         setIsLoading(false);
         setIsPageLoading(false);
       }, 2000);
 
-      setRates(request.data);
-      setTotal(request.count);
+      setRates(rateRequest.data);
+      setTotal(rateRequest.count);
+    } else if (error) {
+      setIsLoading(false);
+      setIsPageLoading(false);
     }
 
     return () => clearTimeout(timer);
-  }, [request]);
+  }, [rateRequest]);
 
   useEffect(() => {
     setIsPageLoading(true);
 
     let timer: NodeJS.Timeout;
 
-    if (request?.data) {
+    if (rateRequest?.data) {
       timer = setTimeout(() => {
         setIsPageLoading(false);
       }, 2000);
 
-      setRates(request.data);
+      setRates(rateRequest.data);
     }
 
     return () => clearTimeout(timer);

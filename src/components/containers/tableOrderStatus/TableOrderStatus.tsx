@@ -13,7 +13,7 @@ const TableOrderStatus: FC = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
 
   const [page, setPage] = useState(1);
-  const { data: request, error } = nfdApi.useGetStatusListQuery({
+  const { data: statusRequest, error } = nfdApi.useGetStatusListQuery({
     page: page - 1,
   });
 
@@ -23,29 +23,32 @@ const TableOrderStatus: FC = () => {
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
-    if (request?.data) {
+    if (statusRequest?.data) {
       timer = setTimeout(() => {
         setIsLoading(false);
         setIsPageLoading(false);
       }, 2000);
-      setStatuses(request.data);
-      setTotal(request.count);
+      setStatuses(statusRequest.data);
+      setTotal(statusRequest.count);
+    } else if (error) {
+      setIsLoading(false);
+      setIsPageLoading(false);
     }
 
     return () => clearTimeout(timer);
-  }, [request]);
+  }, [statusRequest]);
 
   useEffect(() => {
     setIsPageLoading(true);
 
     let timer: NodeJS.Timeout;
 
-    if (request?.data) {
+    if (statusRequest?.data) {
       timer = setTimeout(() => {
         setIsPageLoading(false);
       }, 2000);
 
-      setStatuses(request.data);
+      setStatuses(statusRequest.data);
     }
 
     return () => clearTimeout(timer);
