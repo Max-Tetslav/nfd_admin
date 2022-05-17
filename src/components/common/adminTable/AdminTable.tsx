@@ -87,8 +87,8 @@ const AdminTable: FC<IAdminTableProps> = ({ data, headers, type }) => {
             key: item.id,
             id: item.id,
             price: formatPrice(item.price),
-            name: item.rateTypeId.name,
-            duration: item.rateTypeId.unit,
+            name: item.rateTypeId?.name || DATA_ERROR_MESSAGE,
+            duration: item.rateTypeId?.unit || DATA_ERROR_MESSAGE,
           };
         });
         break;

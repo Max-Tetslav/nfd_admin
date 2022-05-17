@@ -7,6 +7,7 @@ import AdminPagination from '@components/common/adminPagination/AdminPagination'
 import FilterList from '@components/common/filterList/FilterList';
 import Spin from '@components/common/spin/Spin';
 import AdminError from '@components/common/adminError/AdminError';
+import { DATA_ERROR_MESSAGE } from '@utils/constants/tables';
 import OrdersList from '../ordersList/OrdersList';
 import cl from './TableOrders.module.scss';
 
@@ -51,8 +52,8 @@ const TableOrders: React.FC = () => {
   useEffect(() => {
     if (rateRequest.data) {
       const filteredRate = rateRequest.data.data.map((item) => ({
-        name: item.rateTypeId.name,
-        id: item.rateTypeId.id,
+        name: item.rateTypeId?.name || DATA_ERROR_MESSAGE,
+        id: item.rateTypeId?.id || DATA_ERROR_MESSAGE,
       }));
 
       setRates(filteredRate);
