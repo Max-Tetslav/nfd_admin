@@ -1,0 +1,20 @@
+@import "../../mixins.scss";
+
+.modal {
+  border-radius: 5%;
+
+  /* stylelint-disable */
+  .button {
+    @include button;
+    width: 50%;
+  }
+  
+  .button.danger {
+    @include dangerButton;
+  }
+  
+  .button.neutral {
+    @include neutralButton;
+  }
+  /* stylelint-enable */
+}
