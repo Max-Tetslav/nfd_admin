@@ -1,10 +1,16 @@
+@import "../../../mixins.scss";
+
+/* stylelint-disable */
+@include fadein;
+/* stylelint-enable */
+
 .container {
   height: 60px;
   padding: 15px 22px;
   display: flex;
   justify-content: space-between;
   gap: 15px;
-  opacity: 0;
+  animation: 0.5s fadein;
   transition: all 0.5s ease;
 
   @media screen and (max-width: 870px) {
