@@ -1,0 +1,60 @@
+@import "../../../mixins.scss";
+
+.container {
+  padding: 18px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  .leftButtons {
+    display: flex;
+    gap: 12px;
+  }
+
+  /* stylelint-disable */
+  .button {
+    @include button;
+  }
+  
+  .button.danger {
+    @include dangerButton;
+  }
+  
+  .button.neutral {
+    @include neutralButton;
+  }
+  /* stylelint-enable */
+
+  @media screen and (max-width: 400px) {
+    flex-direction: column;
+
+    .button {
+      width: 100%;
+    }
+
+    .leftButtons {
+      width: 100%;
+      flex-direction: column;
+    }
+  }
+}
+
+.modal {
+  border-radius: 5%;
+
+  /* stylelint-disable */
+  .button {
+    @include button;
+    width: 50%;
+  }
+  
+  .button.danger {
+    @include dangerButton;
+  }
+  
+  .button.neutral {
+    @include neutralButton;
+  }
+  /* stylelint-enable */
+}
