@@ -1,20 +1,25 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import nfdApi from '@services/api';
-import { ICar } from '@models/data';
+import useModalConfirm from '@hooks/useModalConfirm/useModalConfirm';
 import { useAppDispatch, useAppSelector } from '@store/store';
 import { updataCarAllFilters } from '@store/reducers/filters';
+import { updateCarCurrent, updateCarDeleteStatus } from '@store/reducers/form';
+import { ICar, IPostResponse, IRateType } from '@models/data';
 import AdminPagination from '@components/common/adminPagination/AdminPagination';
 import FilterList from '@components/common/filterList/FilterList';
-import Spin from '@components/common/spin/Spin';
 import AdminError from '@components/common/adminError/AdminError';
+import Spin from '@components/common/spin/Spin';
 import CarsList from '../carsList/CarsList';
 import cl from './TableCars.module.scss';
 
 const TableCars: FC = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const stateFilters = useAppSelector((state) => state.filters.car);
-
   const [page, setPage] = useState(1);
+  const [cars, setCars] = useState<ICar[]>([]);
+  const [totalCars, setTotalCars] = useState(0);
   const {
     refetch,
     data: carRequest,
@@ -23,14 +28,12 @@ const TableCars: FC = () => {
     isLoading,
   } = nfdApi.useGetCarListQuery({
     page: page - 1,
+    limit: 5,
     category: stateFilters.finalList.category,
   });
   const { data: categoryRequest } = nfdApi.useGetCategoryListQuery({
     page: 0,
   });
-
-  const [cars, setCars] = useState<ICar[]>([]);
-  const [totalCars, setTotalCars] = useState(0);
 
   useEffect(() => {
     if (stateFilters.filterStatus === true) {
@@ -63,6 +66,32 @@ const TableCars: FC = () => {
     }
   }, [page, stateFilters.finalList]);
 
+  const [deleteCar] = nfdApi.useDeleteCarMutation();
+  const confirmDelete = useModalConfirm();
+
+  const onDelete = useCallback((id?: string) => {
+    deleteCar(id).then((data) => {
+      const result = (
+        data as {
+          data: IPostResponse<IRateType>;
+        }
+      ).data;
+
+      dispatch(updateCarDeleteStatus(Boolean(result)));
+    });
+
+    setTimeout(() => dispatch(updateCarDeleteStatus(null)), 4000);
+  }, []);
+
+  const deleteHandler = useCallback((id: string) => {
+    confirmDelete(id, onDelete);
+  }, []);
+
+  const editHandler = useCallback((id: string) => {
+    navigate(`:${id}`);
+    dispatch(updateCarCurrent(id));
+  }, []);
+
   const pagination = useMemo(() => {
     return totalCars > 5 ? (
       <AdminPagination
@@ -90,7 +119,11 @@ const TableCars: FC = () => {
           <Spin loading={isFetching} />
         ) : (
           <>
-            <CarsList cars={cars} />
+            <CarsList
+              cars={cars}
+              deleteHandler={deleteHandler}
+              editHandler={editHandler}
+            />
             {pagination}
           </>
         )}
