@@ -1,0 +1,91 @@
+.container {
+  height: 29px;
+  max-height: 29px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 60%;
+
+  @media screen and (max-width: 500px) {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  @media screen and (max-width: 500px) {
+    flex-direction: column;
+    height: auto;
+    max-height: none;
+  }
+}
+
+.title {
+  display: flex;
+  white-space: nowrap;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 12px;
+  color: var(--black-primary);
+}
+
+.dateGroup {
+  height: 51px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.label {
+  width: 250px;
+  max-width: 250px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 16px;
+  color: var(--black-primary);
+  position: relative;
+  gap: 0 8px;
+
+  .labelText {
+    display: inline-block;
+    text-align: left;
+    white-space: nowrap;
+  }
+}
+
+.input {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: 224px;
+  max-width: 224px;
+  height: 19px;
+  padding: 0;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--black-primary) !important;
+
+  @media screen and (max-width: 450px) {
+    height: 30px;
+  }
+
+  &:disabled {
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  &:hover {
+    border-color: var(--gray);
+    border-bottom: 1px solid var(--border-color);
+  }
+}
+
+.clearIcon {
+  margin: 0 8px;
+  visibility: hidden;
+}
+
+.clearIconVisible {
+  visibility: visible;
+}
