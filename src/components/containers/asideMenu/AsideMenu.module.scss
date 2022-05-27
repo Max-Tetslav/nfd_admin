@@ -14,6 +14,7 @@
 
   @media screen and (max-width: 1150px) {
     position: absolute;
+    opacity: 0;
     transform: translateX(-100%);
     box-shadow: none;
   }
@@ -49,6 +50,7 @@
 }
 
 .opened {
+  opacity: 1;
   transform: translateX(0);
   box-shadow:
     0 1px 75px rgba(90 97 105 / 11%),
