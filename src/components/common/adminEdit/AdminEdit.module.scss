@@ -1,0 +1,69 @@
+@import "../../../mixins.scss";
+
+/* stylelint-disable */
+@include fadein;
+/* stylelint-enable */
+
+.container {
+  animation: 0.5s fadein;
+
+  .title {
+    padding: 18px 0;
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17.5px;
+    line-height: 21px;
+    letter-spacing: -0.4375px;
+    color: var(--font-color);
+  }
+
+  .inputBox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px 15px;
+
+    .label {
+      width: 48%;
+      height: max-content;
+      font-size: 13px;
+    }
+
+    .textarea {
+      width: 100%;
+      font-size: 13px;
+    }
+
+    .number {
+      width: 24%;
+    }
+
+    .autoNumber {
+      width: 20%;
+    }
+
+    @media screen and (max-width: 768px) {
+      .number {
+        width: 48%;
+      }
+
+      .autoNumber {
+        width: 48%;
+      }
+    }
+
+    @media screen and (max-width: 500px) {
+      .label {
+        width: 100%;
+      }
+
+      .number {
+        width: 100%;
+      }
+
+      .autoNumber {
+        width: 100%;
+      }
+    }
+  }
+}
