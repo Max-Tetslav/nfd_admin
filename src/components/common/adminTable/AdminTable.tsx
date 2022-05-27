@@ -1,25 +1,38 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useMemo } from 'react';
 import classNames from 'classnames';
 import { Button, Table } from 'antd';
-import { ICar, ICategory, INameAndID, IPoint, IRate } from '@models/data';
+import {
+  ICar,
+  ICategory,
+  INameAndID,
+  IPoint,
+  IRate,
+  IRateType,
+} from '@models/data';
 import { ETableTypes, ITableColumn, ITableHeader } from '@models/app';
 import cancelIcon from '@assets/svg/cancel.svg';
 import editIcon from '@assets/svg/edit.svg';
 import formatPrice from '@utils/helpers/formatPrice';
 import { DATA_ERROR_MESSAGE } from '@utils/constants/tables';
+import useModalConfirm from '@hooks/useModalConfirm/useModalConfirm';
 import cl from './AdminTable.module.scss';
-import useAnimate from '../../../hooks/useAnimate';
 
 interface IAdminTableProps {
   data: unknown[];
   headers: ITableHeader[];
   type: string;
+  deleteHandler: (id?: string) => void;
+  editHandler: (id: string) => void;
 }
 
-const AdminTable: FC<IAdminTableProps> = ({ data, headers, type }) => {
-  const [animate, setAnimate] = useState(false);
-
-  useAnimate(setAnimate);
+const AdminTable: FC<IAdminTableProps> = ({
+  data,
+  headers,
+  type,
+  deleteHandler,
+  editHandler,
+}) => {
+  const confirmDelete = useModalConfirm();
 
   const colums: ITableColumn[] = useMemo(() => {
     const result: ITableColumn[] = headers.map((item) => {
@@ -33,20 +46,22 @@ const AdminTable: FC<IAdminTableProps> = ({ data, headers, type }) => {
     result.push({
       title: 'Действия',
       key: 'action',
-      render: () => (
+      render: (record) => (
         <div className={cl.buttonBox}>
           <Button
             className={classNames(cl.button, cl.cancelButton)}
-            // onClick={cancelHandler}
+            onClick={() =>
+              confirmDelete((record as INameAndID).id, deleteHandler)
+            }
             icon={
               <img className={cl.buttonIcon} src={cancelIcon} alt="cancel" />
             }
           >
-            Отмена
+            Удалить
           </Button>
           <Button
             className={classNames(cl.button, cl.editButton)}
-            // onClick={editHandler}
+            onClick={() => editHandler((record as INameAndID).id)}
             icon={<img className={cl.buttonIcon} src={editIcon} alt="edit" />}
           >
             Изменить
@@ -62,6 +77,15 @@ const AdminTable: FC<IAdminTableProps> = ({ data, headers, type }) => {
     let rightData;
 
     switch (type) {
+      case ETableTypes.STATUS:
+        rightData = (data as INameAndID[]).map((item) => {
+          return {
+            key: item.id,
+            id: item.id,
+            name: item.name,
+          };
+        });
+        break;
       case ETableTypes.CITY:
         rightData = (data as INameAndID[]).map((item) => {
           return {
@@ -89,6 +113,16 @@ const AdminTable: FC<IAdminTableProps> = ({ data, headers, type }) => {
             price: formatPrice(item.price),
             name: item.rateTypeId?.name || DATA_ERROR_MESSAGE,
             duration: item.rateTypeId?.unit || DATA_ERROR_MESSAGE,
+          };
+        });
+        break;
+      case ETableTypes.RATE_TYPE:
+        rightData = (data as IRateType[]).map((item) => {
+          return {
+            key: item.id,
+            id: item.id,
+            name: item.name || DATA_ERROR_MESSAGE,
+            duration: item.unit || DATA_ERROR_MESSAGE,
           };
         });
         break;
@@ -125,11 +159,9 @@ const AdminTable: FC<IAdminTableProps> = ({ data, headers, type }) => {
     return rightData;
   }, [data]);
 
-  const classes = classNames(
-    cl.container,
-    { [cl.noFilters]: type !== ETableTypes.ORDER || ETableTypes.CAR },
-    { [cl.loaded]: animate },
-  );
+  const classes = classNames(cl.container, {
+    [cl.noFilters]: type !== ETableTypes.ORDER || ETableTypes.CAR,
+  });
 
   return (
     <Table
@@ -137,6 +169,7 @@ const AdminTable: FC<IAdminTableProps> = ({ data, headers, type }) => {
       dataSource={dataList}
       columns={colums}
       pagination={false}
+      locale={{ emptyText: 'Нет данных' }}
     />
   );
 };

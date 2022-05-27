@@ -21,7 +21,7 @@
     object-position: center;
 
     @media screen and (max-width: 870px) {
-      width: 250px;
+      max-width: 275px;
       height: 200px;
     }
   }
