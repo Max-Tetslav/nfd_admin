@@ -66,3 +66,18 @@ export const RATE_HEADERS: ITableHeader[] = [
     key: 'id',
   },
 ];
+
+export const RATE_TYPE_HEADERS: ITableHeader[] = [
+  {
+    name: 'Название',
+    key: 'name',
+  },
+  {
+    name: 'Длительность',
+    key: 'duration',
+  },
+  {
+    name: 'ID',
+    key: 'id',
+  },
+];
