@@ -6,22 +6,39 @@ import cl from './AuthInput.module.scss';
 
 interface IAuthInput {
   label: string;
+  adminPage?: boolean;
+  min?: number;
+  max?: number;
   name: string;
   type: string;
+  as?: string;
+  labelClass?: string;
+  inputClass?: string;
 }
 
-const AuthInput: React.FC<IAuthInput> = ({ label, ...props }) => {
+const AuthInput: React.FC<IAuthInput> = ({
+  label,
+  labelClass,
+  inputClass,
+  adminPage,
+  ...props
+}) => {
   const [field, meta] = useField(props);
 
   const errorClasses = classNames(cl.error, {
     [cl.errorColor]: meta.error,
+    [cl.editFormError]: adminPage,
   });
-  const inputClasses = classNames(cl.input, {
+  const labelClasses = classNames(cl.label, labelClass, {
+    [cl.number]: props.type === 'number',
+  });
+  const inputClasses = classNames(cl.input, inputClass, {
     [cl.errorBorder]: meta.error,
+    [cl.textarea]: props.as === 'textarea',
   });
 
   return (
-    <label className={cl.label} htmlFor={field.name}>
+    <label className={labelClasses} htmlFor={field.name}>
       {label}
       <Field
         {...field}
