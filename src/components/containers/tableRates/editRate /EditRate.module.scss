@@ -1,15 +1,7 @@
 @import "../../../../mixins.scss";
 
 .container {
-  .form {
-    height: 100%;
-    padding: 0 18px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
   /* stylelint-disable */
-  @include adminMain;
+  @include simpleTable;
   /* stylelint-enable */
 }

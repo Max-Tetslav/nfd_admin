@@ -16,6 +16,7 @@
     display: flex;
     gap: 28px;
     justify-content: space-between;
+    animation: 1s fadein;
     transition: all 1s ease;
 
     .firstPart {

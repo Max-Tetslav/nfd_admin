@@ -14,7 +14,7 @@
   border-top: 4px solid var(--blue-primary);
   border-left: 2px solid var(--blue-primary);
   transition: all 0.5s ease;
-  animation: spin linear 2s infinite, 0.5s fadein;
+  animation: 1s fadein, spin linear 2s infinite;
 }
 
 @keyframes spin {
