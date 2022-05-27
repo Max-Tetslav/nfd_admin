@@ -87,3 +87,36 @@
     transform: rotate(45deg) scale(1);
   }
 }
+
+/* stylelint-disable */
+
+.editLabel {
+  height: 29px;
+  align-items: flex-end;
+  padding-left: 40px;
+  padding-bottom: 9px;
+  font-style: normal;
+  font-size: 13px;
+  line-height: 12px;
+  letter-spacing: -0.1842px;
+
+  .checkmark {
+    top: 0;
+    left: 0;
+    height: 29px;
+    width: 29px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+
+    &::after {
+      left: 10px;
+      top: 3px;
+      width: 8px;
+      height: 16px;
+      border-width: 0 3px 3px 0;
+    }
+  }
+}
+/* stylelint-enable */
