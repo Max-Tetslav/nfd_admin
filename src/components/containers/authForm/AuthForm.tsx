@@ -6,7 +6,7 @@ import { Button, notification } from 'antd';
 import Link from 'antd/lib/typography/Link';
 import nfdApi from '@services/api';
 import { useAppDispatch } from '@store/store';
-import { setLoginData } from '@store/reducers/auth';
+import { IRefreshResponse, setLoginData } from '@store/reducers/auth';
 import { EAuthInputTypes } from '@models/auth';
 import AuthInput from '@components/common/authInput/AuthInput';
 import { errorTitle, errorDescription } from '@utils/constants/auth';
@@ -38,7 +38,7 @@ const AuthForm: React.FC = () => {
         'tokenExpires',
         loginResp.data.expires_in.toString(),
       );
-      dispatch(setLoginData());
+      dispatch(setLoginData(loginResp as IRefreshResponse));
       navigate('/admin/order');
     }
   }, [loginResp]);
