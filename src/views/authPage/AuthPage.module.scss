@@ -1,7 +1,10 @@
+@import "../../mixins.scss";
+
 .container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
+  /* stylelint-disable */
+  @include page;
+  /* stylelint-enable */
+
   justify-content: center;
   align-items: center;
 }
