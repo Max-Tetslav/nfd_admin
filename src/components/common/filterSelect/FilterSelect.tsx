@@ -1,13 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Select } from 'antd';
 import { INameAndID } from '@models/data';
 import { ETableTypes } from '@models/app';
 import { useAppDispatch, useAppSelector } from '@store/store';
 import { updateCarFilter, updateOrderFilter } from '@store/reducers/filters';
-import selectIcon from '@assets/svg/select.svg';
-import cl from './FilterSelect.module.scss';
-
-const { Option } = Select;
+import AppSelect from '../appSelect/AppSelect';
 
 interface IFilterSelectProps {
   list: INameAndID[];
@@ -118,23 +114,14 @@ const FilterSelect: React.FC<IFilterSelectProps> = ({ list, title, type }) => {
   }, [stateFilters.car.finalList, stateFilters.order.finalList]);
 
   return (
-    <Select
-      className={cl.container}
-      suffixIcon={<img src={selectIcon} alt="select" />}
-      placeholder={title}
+    <AppSelect
+      list={list}
+      title={title}
       value={value}
-      showSearch
-      allowClear
-      onChange={changeHandler}
-      onClear={clearHandler}
-      onSelect={selectHandler}
-    >
-      {list.map((item) => (
-        <Option title={item.name} value={item.id} key={item.id}>
-          {item.name}
-        </Option>
-      ))}
-    </Select>
+      changeHandler={changeHandler}
+      clearHandler={clearHandler}
+      selectHandler={selectHandler}
+    />
   );
 };
 
