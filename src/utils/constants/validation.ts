@@ -14,6 +14,7 @@ export const CAR_VALIDATION = Yup.object({
   maxPrice: Yup.number().required('Обязательное поле!'),
   tank: Yup.number()
     .required('Обязательное поле!')
+    .min(1, 'Минимальное значение: 1')
     .max(100, 'Максимальное значение: 100'),
   imgSize: Yup.number()
     .required('Загрузите фото автомобиля!')
