@@ -2,10 +2,7 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import nfdApi from '@services/api';
 import { useAppDispatch } from '@store/store';
-import {
-  // updateCategoryCurrent,
-  updateCategoryDeleteStatus,
-} from '@store/reducers/form';
+import { updateCategoryDeleteStatus } from '@store/reducers/form';
 import { ETableTypes } from '@models/app';
 import { INameAndID, IPostResponse, IRateType } from '@models/data';
 import AdminPagination from '@components/common/adminPagination/AdminPagination';

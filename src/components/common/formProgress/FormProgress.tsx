@@ -15,7 +15,7 @@ const FormProgress: FC = () => {
   };
 
   const getStatus = useCallback(() => {
-    return completeList.length * 12 < 100 ? completeList.length * 12 : 100;
+    return completeList.length * 9 < 100 ? completeList.length * 9 : 100;
   }, [completeList]);
 
   useEffect(() => {
