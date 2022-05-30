@@ -1,16 +1,10 @@
-import React, {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useField, useFormikContext } from 'formik';
 import classNames from 'classnames';
-import { Input } from 'antd';
+import moment, { Moment } from 'moment';
+import { DatePicker } from 'antd';
+import { DatePickerProps, RangePickerProps } from 'antd/lib/date-picker';
 import { IFormOrder } from '@models/app';
-import getCalendarDateFormat from '@utils/helpers/getCalendarDateFormat';
-import clearIcon from '@assets/svg/clearDatepicker.svg';
 import cl from './EditDatepicker.module.scss';
 
 interface IFilterSelectProps {
@@ -38,53 +32,49 @@ const EditDatepicker: React.FC<IFilterSelectProps> = ({
     }
   }, []);
 
-  const changeHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const dateTo = new Date(e.target.value).getTime() + values.totalTime;
-    setFieldValue('dateTo', dateTo);
+  const changeHandler: DatePickerProps['onChange'] = useCallback(
+    (date: Moment) => {
+      const dateTo = date.valueOf() + values.totalTime;
+      setFieldValue('dateTo', dateTo);
 
-    helpers.setValue(new Date(e.target.value).getTime());
-  }, []);
-
-  const allowClear = useMemo(() => {
-    if (props.readonly || isDisabled) {
-      return false;
-    }
-    return {
-      clearIcon: (
-        <img
-          src={clearIcon}
-          className={classNames(cl.clearIcon, {
-            [cl.clearIconVisible]: field.value,
-          })}
-          alt="clear-input"
-        />
-      ),
-    };
-  }, [props.readonly, isDisabled]);
-
-  const minDate = useMemo(() => getCalendarDateFormat(field.value), []);
+      helpers.setValue(date.valueOf());
+    },
+    [],
+  ) as DatePickerProps['onChange'];
 
   const classes = classNames(cl.container, {
     [cl.disabled]: isDisabled || props.readonly,
   });
 
+  const dateFormat = useMemo(() => ['DD:MM:YYYY, h:mm'], []);
+
+  const disabledDate: RangePickerProps['disabledDate'] = useCallback(
+    (current) => {
+      return current && current < moment(field.value);
+    },
+    [],
+  );
+
   return (
     <label className={classes} htmlFor={field.name}>
       <span className={cl.title}>{label}</span>
-      <Input
-        value={getCalendarDateFormat(field.value)}
-        min={minDate}
-        type={props.type}
+      <DatePicker
+        value={moment(field.value)}
         bordered={false}
         onChange={changeHandler}
         className={cl.input}
-        placeholder={placeholder}
-        autoComplete="off"
+        placeholder=""
+        suffixIcon={null}
         id={field.name}
         name={field.name}
-        readOnly={props.readonly || isDisabled}
-        allowClear={allowClear}
+        allowClear={false}
         disabled={props.readonly || isDisabled}
+        showTime
+        showSecond={false}
+        format={dateFormat}
+        defaultValue={moment(field.value)}
+        inputReadOnly={props.readonly || isDisabled}
+        disabledDate={disabledDate}
       />
       {(isDisabled || props.readonly) && (
         <span className={cl.readonly}>Это поле только для чтения</span>
