@@ -1,24 +1,28 @@
 import React, { FC, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ErrorMessage, Form, Formik } from 'formik';
 import classNames from 'classnames';
 import { Button, Upload } from 'antd';
+import useFormConfirm from '@hooks/useFormConfirm';
 import nfdApi from '@services/api';
 import { useAppDispatch, useAppSelector } from '@store/store';
-import { ETableFormTypes, ETableTypes } from '@models/app';
+import {
+  ETableFormTypes,
+  ETableTypes,
+  IFormCar,
+  TFormikSubmit,
+} from '@models/app';
 import { updateCarSaveStatus } from '@store/reducers/form';
 import { updataCarAllFilters } from '@store/reducers/filters';
 import AdminEdit from '@components/common/adminEdit/AdminEdit';
 import EditButtonList from '@components/common/editButtonList/EditButtonList';
 import FormProgress from '@components/common/formProgress/FormProgress';
 import { CAR_VALIDATION } from '@utils/constants/validation';
-import { NO_PHOTO } from '@utils/constants/tables';
+import { CAR_INITIAL_VALUES, NO_PHOTO } from '@utils/constants/tables';
 import noPhotoIcon from '@assets/svg/no-photo.svg';
 import cl from './AddCar.module.scss';
 
 const AddCar: FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const categoryList = useAppSelector(
     (state) => state.filters.car.all.category,
   );
@@ -50,63 +54,48 @@ const AddCar: FC = () => {
     [categoryList.length],
   );
 
+  const sumbitHandler = useFormConfirm(
+    postCar as (data: object) => Promise<unknown>,
+    updateCarSaveStatus,
+    ETableTypes.CAR,
+  );
+
+  const onSubmit = useCallback<TFormikSubmit<IFormCar>>(
+    (values, { setSubmitting }) => {
+      setTimeout(() => {
+        sumbitHandler({
+          name: values.model,
+          number: values.number,
+          tank: Number(values.tank),
+          colors: values.colorList,
+          priceMin: Number(values.minPrice),
+          priceMax: Number(values.maxPrice),
+          description: values.description,
+          categoryId: {
+            id: values.category,
+          },
+          thumbnail: {
+            size: Number(values.imgSize),
+            originalname: values.imgName,
+            mimetype: values.imgType,
+            path: values.imgSrc,
+          },
+        });
+
+        setSubmitting(false);
+      }, 400);
+    },
+    [],
+  );
+
   return (
     <main className={cl.container}>
       <Formik
-        initialValues={{
-          model: '',
-          category: '',
-          number: '',
-          minPrice: '',
-          maxPrice: '',
-          tank: '',
-          description: '',
-          imgSize: '',
-          imgType: '',
-          imgSrc: '',
-          imgName: '',
-          color: '',
-          colorList: [],
-        }}
+        initialValues={CAR_INITIAL_VALUES}
         validationSchema={CAR_VALIDATION}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            postCar({
-              name: values.model,
-              number: values.number,
-              tank: Number(values.tank),
-              colors: values.colorList,
-              priceMin: Number(values.minPrice),
-              priceMax: Number(values.maxPrice),
-              description: values.description,
-              categoryId: {
-                id: values.category,
-              },
-              thumbnail: {
-                size: Number(values.imgSize),
-                originalname: values.imgName,
-                mimetype: values.imgType,
-                path: values.imgSrc,
-              },
-            }).then((data) => {
-              const result = (
-                data as {
-                  data: unknown;
-                }
-              ).data;
-
-              dispatch(updateCarSaveStatus(Boolean(result)));
-              setTimeout(() => {
-                dispatch(updateCarSaveStatus(null));
-              }, 4000);
-              navigate('/admin/car');
-            });
-
-            setSubmitting(false);
-          }, 400);
-        }}
+        onSubmit={onSubmit}
       >
         {({ values, setFieldValue, setFieldError, errors }) => (
           <Form className={cl.form}>
@@ -190,7 +179,10 @@ const AddCar: FC = () => {
                 type={ETableTypes.CAR}
                 formType={ETableFormTypes.ADD}
               />
-              <EditButtonList formType={ETableFormTypes.ADD} />
+              <EditButtonList
+                formType={ETableFormTypes.ADD}
+                pageType={ETableTypes.CAR}
+              />
             </div>
           </Form>
         )}

@@ -1,4 +1,11 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import nfdApi from '@services/api';
 import useModalConfirm from '@hooks/useModalConfirm/useModalConfirm';
@@ -6,6 +13,7 @@ import { useAppDispatch, useAppSelector } from '@store/store';
 import { updataCarAllFilters } from '@store/reducers/filters';
 import { updateCarCurrent, updateCarDeleteStatus } from '@store/reducers/form';
 import { ICar, IPostResponse, IRateType } from '@models/data';
+import { ETableTypes } from '@models/app';
 import AdminPagination from '@components/common/adminPagination/AdminPagination';
 import FilterList from '@components/common/filterList/FilterList';
 import AdminError from '@components/common/adminError/AdminError';
@@ -20,6 +28,8 @@ const TableCars: FC = () => {
   const [page, setPage] = useState(1);
   const [cars, setCars] = useState<ICar[]>([]);
   const [totalCars, setTotalCars] = useState(0);
+  const confirmDelete = useModalConfirm();
+  const [deleteCar] = nfdApi.useDeleteCarMutation();
   const {
     refetch,
     data: carRequest,
@@ -43,6 +53,10 @@ const TableCars: FC = () => {
   }, [stateFilters.filterStatus]);
 
   useEffect(() => {
+    refetch();
+  }, [page]);
+
+  useEffect(() => {
     if (categoryRequest?.data) {
       const filteredData = categoryRequest.data.map((item) => ({
         name: item.name,
@@ -59,15 +73,6 @@ const TableCars: FC = () => {
       setTotalCars(carRequest.count);
     }
   }, [carRequest]);
-
-  useEffect(() => {
-    if (carRequest?.data) {
-      setCars(carRequest.data);
-    }
-  }, [page, stateFilters.finalList]);
-
-  const [deleteCar] = nfdApi.useDeleteCarMutation();
-  const confirmDelete = useModalConfirm();
 
   const onDelete = useCallback((id?: string) => {
     deleteCar(id).then((data) => {
@@ -112,24 +117,35 @@ const TableCars: FC = () => {
       );
     }
 
+    let list: ReactNode;
+
+    if (carRequest?.data[0].id === cars[0]?.id) {
+      list = (
+        <CarsList
+          cars={cars}
+          deleteHandler={deleteHandler}
+          editHandler={editHandler}
+        />
+      );
+    }
+
     return (
       <>
-        <FilterList type="car" categoryList={stateFilters.all.category} />
+        <FilterList
+          type={ETableTypes.CAR}
+          categoryList={stateFilters.all.category}
+        />
         {isFetching ? (
           <Spin loading={isFetching} />
         ) : (
           <>
-            <CarsList
-              cars={cars}
-              deleteHandler={deleteHandler}
-              editHandler={editHandler}
-            />
+            {list}
             {pagination}
           </>
         )}
       </>
     );
-  }, [isFetching, error, cars]);
+  }, [carRequest, cars, isFetching, error]);
 
   return (
     <main className={cl.container}>

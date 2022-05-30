@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import nfdApi from '@services/api';
 import { useAppDispatch } from '@store/store';
 import {
-  updateCategoryCurrent,
+  // updateCategoryCurrent,
   updateCategoryDeleteStatus,
 } from '@store/reducers/form';
 import { ETableTypes } from '@models/app';
@@ -61,7 +61,6 @@ const TableCategory: FC = () => {
 
   const editHandler = useCallback((id: string) => {
     navigate(`:${id}`);
-    dispatch(updateCategoryCurrent(id));
   }, []);
 
   const pagination = useMemo(() => {

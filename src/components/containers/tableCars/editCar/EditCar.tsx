@@ -1,8 +1,9 @@
-import React, { FC, useCallback, useEffect } from 'react';
+import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ErrorMessage, Form, Formik } from 'formik';
 import classNames from 'classnames';
 import { Button, Upload } from 'antd';
+import useFormConfirm from '@hooks/useFormConfirm';
 import nfdApi from '@services/api';
 import { useAppDispatch, useAppSelector } from '@store/store';
 import {
@@ -10,7 +11,12 @@ import {
   updateCarSaveStatus,
 } from '@store/reducers/form';
 import { updataCarAllFilters } from '@store/reducers/filters';
-import { ETableFormTypes, ETableTypes } from '@models/app';
+import {
+  ETableFormTypes,
+  ETableTypes,
+  IFormCar,
+  TFormikSubmit,
+} from '@models/app';
 import AdminEdit from '@components/common/adminEdit/AdminEdit';
 import EditButtonList from '@components/common/editButtonList/EditButtonList';
 import FormProgress from '@components/common/formProgress/FormProgress';
@@ -78,68 +84,71 @@ const EditCar: FC = () => {
     });
   }, []);
 
+  const sumbitHandler = useFormConfirm(
+    putCar as (data: object) => Promise<unknown>,
+    updateCarSaveStatus,
+    ETableTypes.CAR,
+  );
+
+  const onSubmit = useCallback<TFormikSubmit<IFormCar>>(
+    (values, { setSubmitting }) => {
+      setTimeout(() => {
+        sumbitHandler({
+          id: getIdFromParams(carId as string),
+          data: {
+            name: values.model,
+            number: values.number,
+            tank: Number(values.tank),
+            colors: values.colorList,
+            priceMin: Number(values.minPrice),
+            priceMax: Number(values.maxPrice),
+            description: values.description,
+            categoryId: {
+              id: values.category,
+            },
+            thumbnail: {
+              size: Number(values.imgSize),
+              originalname: values.imgName,
+              mimetype: values.imgType,
+              path: values.imgSrc,
+            },
+          },
+        });
+
+        setSubmitting(false);
+      }, 400);
+    },
+    [carId],
+  );
+
+  const initialValues = useMemo(() => {
+    return {
+      model: carRequest?.data.name || '',
+      category: carRequest?.data.categoryId?.id || '',
+      number: carRequest?.data.number || '',
+      minPrice: carRequest?.data.priceMin || 0,
+      maxPrice: carRequest?.data.priceMax || 0,
+      tank: carRequest?.data.tank || 0,
+      description: carRequest?.data.description || '',
+      imgSize: carRequest?.data.thumbnail?.size || 0,
+      imgType: carRequest?.data.thumbnail?.mimetype || '',
+      imgSrc: carRequest?.data.thumbnail?.path || '',
+      imgName: carRequest?.data.thumbnail?.originalname || '',
+      color: '',
+      colorList: carRequest?.data.colors || [],
+    };
+  }, [carRequest]);
+
   return isLoading ? (
     <Spin loading={isLoading} />
   ) : (
     <main className={cl.container}>
       <Formik
-        initialValues={{
-          model: carRequest?.data.name || '',
-          category: carRequest?.data.categoryId?.id || '',
-          number: carRequest?.data.number || '',
-          minPrice: carRequest?.data.priceMin || '',
-          maxPrice: carRequest?.data.priceMax || '',
-          tank: carRequest?.data.tank || '',
-          description: carRequest?.data.description || '',
-          imgSize: carRequest?.data.thumbnail?.size || '',
-          imgType: carRequest?.data.thumbnail?.mimetype || '',
-          imgSrc: carRequest?.data.thumbnail?.path || '',
-          imgName: carRequest?.data.thumbnail?.originalname || '',
-          color: '',
-          colorList: carRequest?.data.colors || [],
-        }}
+        initialValues={initialValues}
         validationSchema={CAR_VALIDATION}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            putCar({
-              id: getIdFromParams(carId as string),
-              data: {
-                name: values.model,
-                number: values.number,
-                tank: Number(values.tank),
-                colors: values.colorList,
-                priceMin: Number(values.minPrice),
-                priceMax: Number(values.maxPrice),
-                description: values.description,
-                categoryId: {
-                  id: values.category,
-                },
-                thumbnail: {
-                  size: Number(values.imgSize),
-                  originalname: values.imgName,
-                  mimetype: values.imgType,
-                  path: values.imgSrc,
-                },
-              },
-            }).then((data) => {
-              const result = (
-                data as {
-                  data: unknown;
-                }
-              ).data;
-
-              dispatch(updateCarSaveStatus(Boolean(result)));
-              setTimeout(() => {
-                dispatch(updateCarSaveStatus(null));
-              }, 4000);
-              navigate('/admin/car');
-            });
-
-            setSubmitting(false);
-          }, 400);
-        }}
+        onSubmit={onSubmit}
       >
         {({ values, setFieldValue, setFieldError, errors }) => (
           <Form className={cl.form}>
@@ -224,6 +233,7 @@ const EditCar: FC = () => {
               />
               <EditButtonList
                 formType={ETableFormTypes.EDIT}
+                pageType={ETableTypes.CAR}
                 deleteHandler={deleteHandler}
               />
             </div>

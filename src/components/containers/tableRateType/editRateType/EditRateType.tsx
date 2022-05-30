@@ -1,13 +1,19 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Formik } from 'formik';
+import useFormConfirm from '@hooks/useFormConfirm';
 import nfdApi from '@services/api';
 import { useAppDispatch } from '@store/store';
 import {
   updateRateTypeDeleteStatus,
   updateRateTypeSaveStatus,
 } from '@store/reducers/form';
-import { ETableFormTypes, ETableTypes } from '@models/app';
+import {
+  ETableFormTypes,
+  ETableTypes,
+  IFormRateType,
+  TFormikSubmit,
+} from '@models/app';
 import { IPostResponse, IRateType } from '@models/data';
 import Spin from '@components/common/spin/Spin';
 import AdminEdit from '@components/common/adminEdit/AdminEdit';
@@ -43,39 +49,43 @@ const EditRateType: FC = () => {
     });
   }, []);
 
+  const sumbitHandler = useFormConfirm(
+    putRateType as (data: object) => Promise<unknown>,
+    updateRateTypeSaveStatus,
+    ETableTypes.RATE_TYPE,
+  );
+
+  const onSubmit = useCallback<TFormikSubmit<IFormRateType>>(
+    (values, { setSubmitting }) => {
+      setTimeout(() => {
+        sumbitHandler({
+          id: getIdFromParams(rateTypeId as string),
+          data: values,
+        });
+
+        setSubmitting(false);
+      }, 400);
+    },
+    [rateTypeId],
+  );
+
+  const initialValues = useMemo(() => {
+    return {
+      name: rateTypeRequest?.data.name || '',
+      unit: rateTypeRequest?.data.unit || '',
+    };
+  }, [rateTypeRequest]);
+
   return isFetching ? (
     <Spin loading={isFetching} />
   ) : (
     <main className={cl.container}>
       <Formik
-        initialValues={{
-          name: rateTypeRequest?.data.name || '',
-          duration: rateTypeRequest?.data.unit || '',
-        }}
+        initialValues={initialValues}
         validationSchema={RATE_TYPE_VALIDATION}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            putRateType({
-              id: getIdFromParams(rateTypeId as string),
-              data: {
-                name: values.name,
-                unit: values.duration,
-              },
-            }).then((data) => {
-              const result = (data as { data: unknown }).data;
-
-              dispatch(updateRateTypeSaveStatus(Boolean(result)));
-              setTimeout(() => {
-                dispatch(updateRateTypeSaveStatus(null));
-              }, 4000);
-              navigate('/admin/tariffType');
-            });
-
-            setSubmitting(false);
-          }, 400);
-        }}
+        onSubmit={onSubmit}
       >
         <Form className={cl.form}>
           <AdminEdit
@@ -84,6 +94,7 @@ const EditRateType: FC = () => {
           />
           <EditButtonList
             formType={ETableFormTypes.EDIT}
+            pageType={ETableTypes.RATE_TYPE}
             deleteHandler={deleteHandler}
           />
         </Form>

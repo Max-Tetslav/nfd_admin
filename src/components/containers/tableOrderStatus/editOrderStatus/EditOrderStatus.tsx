@@ -1,13 +1,19 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Formik } from 'formik';
+import useFormConfirm from '@hooks/useFormConfirm';
 import nfdApi from '@services/api';
 import { useAppDispatch } from '@store/store';
 import {
   updateStatusDeleteStatus,
   updateStatusSaveStatus,
 } from '@store/reducers/form';
-import { ETableFormTypes, ETableTypes } from '@models/app';
+import {
+  ETableFormTypes,
+  ETableTypes,
+  IFormName,
+  TFormikSubmit,
+} from '@models/app';
 import Spin from '@components/common/spin/Spin';
 import AdminEdit from '@components/common/adminEdit/AdminEdit';
 import EditButtonList from '@components/common/editButtonList/EditButtonList';
@@ -19,11 +25,11 @@ const EditOrderStatus: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { id: statusId } = useParams();
+  const [putStatus] = nfdApi.usePutStatusMutation();
+  const [deleteStatus] = nfdApi.useDeleteStatusMutation();
   const { data: statusRequest, isLoading } = nfdApi.useGetStatusQuery(
     getIdFromParams(statusId as string),
   );
-  const [putStatus] = nfdApi.usePutStatusMutation();
-  const [deleteStatus] = nfdApi.useDeleteStatusMutation();
 
   const deleteHandler = useCallback(() => {
     deleteStatus(getIdFromParams(statusId as string)).then((data) => {
@@ -41,39 +47,42 @@ const EditOrderStatus: FC = () => {
     });
   }, []);
 
+  const sumbitHandler = useFormConfirm(
+    putStatus as (data: object) => Promise<unknown>,
+    updateStatusSaveStatus,
+    ETableTypes.STATUS,
+  );
+
+  const onSubmit = useCallback<TFormikSubmit<IFormName>>(
+    (values, { setSubmitting }) => {
+      setTimeout(() => {
+        sumbitHandler({
+          id: getIdFromParams(statusId as string),
+          data: values,
+        });
+
+        setSubmitting(false);
+      }, 400);
+    },
+    [statusId],
+  );
+
+  const initialValues = useMemo(() => {
+    return {
+      name: statusRequest?.data.name || '',
+    };
+  }, [statusRequest]);
+
   return isLoading ? (
     <Spin loading={isLoading} />
   ) : (
     <main className={cl.container}>
       <Formik
-        initialValues={{
-          name: statusRequest?.data.name || '',
-        }}
+        initialValues={initialValues}
         validationSchema={NAME_VALIDATION}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            putStatus({
-              data: values,
-              id: getIdFromParams(statusId as string),
-            }).then((data) => {
-              const result = (
-                data as {
-                  data: unknown;
-                }
-              ).data;
-
-              dispatch(updateStatusSaveStatus(Boolean(result)));
-              setTimeout(() => {
-                dispatch(updateStatusSaveStatus(null));
-              }, 4000);
-              navigate('/admin/status');
-            });
-
-            setSubmitting(false);
-          }, 400);
-        }}
+        onSubmit={onSubmit}
       >
         <Form className={cl.form}>
           <AdminEdit
@@ -82,6 +91,7 @@ const EditOrderStatus: FC = () => {
           />
           <EditButtonList
             formType={ETableFormTypes.EDIT}
+            pageType={ETableTypes.STATUS}
             deleteHandler={deleteHandler}
           />
         </Form>

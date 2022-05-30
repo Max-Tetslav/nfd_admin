@@ -1,6 +1,7 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Formik } from 'formik';
+import useFormConfirm from '@hooks/useFormConfirm';
 import nfdApi from '@services/api';
 import {
   updateCityDeleteStatus,
@@ -8,7 +9,12 @@ import {
 } from '@store/reducers/form';
 import { useAppDispatch } from '@store/store';
 import { IPostResponse, IRateType } from '@models/data';
-import { ETableFormTypes, ETableTypes } from '@models/app';
+import {
+  ETableFormTypes,
+  ETableTypes,
+  IFormName,
+  TFormikSubmit,
+} from '@models/app';
 import AdminEdit from '@components/common/adminEdit/AdminEdit';
 import EditButtonList from '@components/common/editButtonList/EditButtonList';
 import Spin from '@components/common/spin/Spin';
@@ -42,44 +48,48 @@ const EditCity: FC = () => {
     });
   }, []);
 
+  const sumbitHandler = useFormConfirm(
+    putCity as (data: object) => Promise<unknown>,
+    updateCitySaveStatus,
+    ETableTypes.CITY,
+  );
+
+  const onSubmit = useCallback<TFormikSubmit<IFormName>>(
+    (values, { setSubmitting }) => {
+      setTimeout(() => {
+        sumbitHandler({
+          data: values,
+          id: getIdFromParams(cityId as string),
+        });
+
+        setSubmitting(false);
+      }, 400);
+    },
+    [cityId],
+  );
+
+  const initialValues = useMemo(() => {
+    return {
+      name: cityRequest?.data.name || '',
+    };
+  }, [cityRequest]);
+
   return isLoading ? (
     <Spin loading={isLoading} />
   ) : (
     <main className={cl.container}>
       <Formik
-        initialValues={{
-          name: cityRequest?.data.name || '',
-        }}
+        initialValues={initialValues}
         validationSchema={NAME_VALIDATION}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            putCity({
-              data: values,
-              id: getIdFromParams(cityId as string),
-            }).then((data) => {
-              const result = (
-                data as {
-                  data: IPostResponse<IRateType>;
-                }
-              ).data;
-
-              dispatch(updateCitySaveStatus(Boolean(result)));
-              setTimeout(() => {
-                dispatch(updateCitySaveStatus(null));
-              }, 4000);
-              navigate('/admin/city');
-            });
-
-            setSubmitting(false);
-          }, 400);
-        }}
+        onSubmit={onSubmit}
       >
         <Form className={cl.form}>
           <AdminEdit type={ETableTypes.CITY} formType={ETableFormTypes.EDIT} />
           <EditButtonList
             formType={ETableFormTypes.EDIT}
+            pageType={ETableTypes.CITY}
             deleteHandler={deleteHandler}
           />
         </Form>

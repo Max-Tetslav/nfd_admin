@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { useNavigate } from 'react-router-dom';
 import nfdApi from '@services/api';
 import { IOrderData, TPostOrderData } from '@models/data';
 import { ETableTypes } from '@models/app';
@@ -9,8 +16,6 @@ import FilterList from '@components/common/filterList/FilterList';
 import Spin from '@components/common/spin/Spin';
 import AdminError from '@components/common/adminError/AdminError';
 import { DATA_ERROR_MESSAGE } from '@utils/constants/tables';
-import { useNavigate } from 'react-router-dom';
-import { updateCarCurrentImg } from '@store/reducers/form';
 import OrdersList from '../ordersList/OrdersList';
 import cl from './TableOrders.module.scss';
 
@@ -31,6 +36,7 @@ const TableOrders: React.FC = () => {
     data: orderRequest,
     error,
     isFetching,
+    isLoading,
   } = nfdApi.useGetOrdersListQuery({
     page: page - 1,
     city: stateFilters.finalList.city,
@@ -48,6 +54,10 @@ const TableOrders: React.FC = () => {
 
     setPage(1);
   }, [stateFilters.filterStatus]);
+
+  useEffect(() => {
+    refetch();
+  }, [page]);
 
   useEffect(() => {
     if (rateRequest.data) {
@@ -91,13 +101,6 @@ const TableOrders: React.FC = () => {
     }
   }, [error]);
 
-  useEffect(() => {
-    if (orderRequest?.data) {
-      setOrders(orderRequest.data);
-      dispatch(updateCarCurrentImg(''));
-    }
-  }, [page, stateFilters.finalList]);
-
   const actionHandler = useCallback(
     (orderId: string, orderData: TPostOrderData) => {
       return putOrder({
@@ -132,6 +135,18 @@ const TableOrders: React.FC = () => {
       );
     }
 
+    let list: ReactNode;
+
+    if (orderRequest?.data[0].id === orders[0]?.id) {
+      list = (
+        <OrdersList
+          orders={orders}
+          actionHandler={actionHandler}
+          editHandler={editHandler}
+        />
+      );
+    }
+
     return (
       <>
         <FilterList
@@ -144,11 +159,7 @@ const TableOrders: React.FC = () => {
           <Spin loading={isFetching} />
         ) : (
           <>
-            <OrdersList
-              orders={orders}
-              actionHandler={actionHandler}
-              editHandler={editHandler}
-            />
+            {list}
             {pagination}
           </>
         )}
@@ -158,7 +169,7 @@ const TableOrders: React.FC = () => {
 
   return (
     <main className={cl.container}>
-      {isFetching ? <Spin loading={isFetching} /> : content}
+      {isLoading ? <Spin loading={isLoading} /> : content}
     </main>
   );
 };

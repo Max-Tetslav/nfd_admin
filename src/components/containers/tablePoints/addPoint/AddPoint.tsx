@@ -1,18 +1,23 @@
-import React, { FC, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { FC, useCallback, useEffect } from 'react';
 import { Form, Formik } from 'formik';
+import useFormConfirm from '@hooks/useFormConfirm';
 import nfdApi from '@services/api';
 import { useAppDispatch } from '@store/store';
 import { updateCityList, updatePointSaveStatus } from '@store/reducers/form';
-import { ETableFormTypes, ETableTypes } from '@models/app';
+import {
+  ETableFormTypes,
+  ETableTypes,
+  IFormPoint,
+  TFormikSubmit,
+} from '@models/app';
 import AdminEdit from '@components/common/adminEdit/AdminEdit';
 import EditButtonList from '@components/common/editButtonList/EditButtonList';
 import { POINT_VALIDATION } from '@utils/constants/validation';
+import { POINT_INITIAL_VALUES } from '@utils/constants/tables';
 import cl from './AddPoint.module.scss';
 
 const AddPoint: FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const [postPoint] = nfdApi.usePostPointMutation();
   const { data: cityRequest } = nfdApi.useGetCityListQuery({
@@ -30,42 +35,44 @@ const AddPoint: FC = () => {
     }
   }, [cityRequest]);
 
+  const sumbitHandler = useFormConfirm(
+    postPoint as (data: object) => Promise<unknown>,
+    updatePointSaveStatus,
+    ETableTypes.POINT,
+  );
+
+  const onSubmit = useCallback<TFormikSubmit<IFormPoint>>(
+    (values, { setSubmitting }) => {
+      setTimeout(() => {
+        sumbitHandler({
+          name: values.name,
+          address: values.address,
+          cityId: {
+            id: values.city,
+          },
+        });
+
+        setSubmitting(false);
+      }, 400);
+    },
+    [],
+  );
+
   return (
     <main className={cl.container}>
       <Formik
-        initialValues={{
-          name: '',
-          city: '',
-          address: '',
-        }}
+        initialValues={POINT_INITIAL_VALUES}
         validationSchema={POINT_VALIDATION}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            postPoint({
-              name: values.name,
-              cityId: {
-                id: values.city,
-              },
-              address: values.address,
-            }).then((data) => {
-              const result = (data as { data: unknown }).data;
-
-              dispatch(updatePointSaveStatus(Boolean(result)));
-              setTimeout(() => {
-                dispatch(updatePointSaveStatus(null));
-              }, 4000);
-              navigate('/admin/point');
-            });
-
-            setSubmitting(false);
-          }, 400);
-        }}
+        onSubmit={onSubmit}
       >
         <Form className={cl.form}>
           <AdminEdit type={ETableTypes.POINT} formType={ETableFormTypes.ADD} />
-          <EditButtonList formType="add" />
+          <EditButtonList
+            formType={ETableFormTypes.ADD}
+            pageType={ETableTypes.POINT}
+          />
         </Form>
       </Formik>
     </main>

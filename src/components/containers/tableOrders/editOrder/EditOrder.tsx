@@ -1,15 +1,17 @@
-import AdminEdit from '@components/common/adminEdit/AdminEdit';
-import EditButtonList from '@components/common/editButtonList/EditButtonList';
-import { Form, Formik } from 'formik';
-import React, { FC, useCallback, useEffect } from 'react';
-import { ETableFormTypes, ETableTypes } from '@models/app';
-import nfdApi from '@services/api';
-import getIdFromParams from '@utils/helpers/getIdFromParams';
+import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Spin from '@components/common/spin/Spin';
+import { Form, Formik } from 'formik';
+import useFormConfirm from '@hooks/useFormConfirm';
+import nfdApi from '@services/api';
+import { useAppDispatch, useAppSelector } from '@store/store';
+import {
+  ETableFormTypes,
+  ETableTypes,
+  IFormOrder,
+  TFormikSubmit,
+} from '@models/app';
 import {
   updateCarColors,
-  updateCarCurrentImg,
   updateCarList,
   updateOrderDeleteStatus,
   updateOrderSaveStatus,
@@ -17,12 +19,16 @@ import {
   updatePointList,
   updateStatusList,
 } from '@store/reducers/form';
-import { useAppDispatch, useAppSelector } from '@store/store';
+import AdminEdit from '@components/common/adminEdit/AdminEdit';
+import EditButtonList from '@components/common/editButtonList/EditButtonList';
 import OrderEditPrice from '@components/common/orderEditPrice/OrderEditPrice';
-import noPhotoIcon from '@assets/svg/no-photo.svg';
+import Spin from '@components/common/spin/Spin';
 import { NO_PHOTO } from '@utils/constants/tables';
 import getDurationString from '@utils/helpers/getDurationString';
+import getIdFromParams from '@utils/helpers/getIdFromParams';
 import { ORDER_VALIDATION } from '@utils/constants/validation';
+import noPhotoIcon from '@assets/svg/no-photo.svg';
+import loadingIcon from '@assets/svg/loading.svg';
 import cl from './EditOrder.module.scss';
 
 const EditOrder: FC = () => {
@@ -34,7 +40,6 @@ const EditOrder: FC = () => {
   const pointList = useAppSelector((state) => state.form.point.list);
   const colorList = useAppSelector((state) => state.form.car.colors);
   const currentCar = useAppSelector((state) => state.form.car.current);
-  const currentCarImg = useAppSelector((state) => state.form.car.currentImg);
   const [getCar, carResponse] = nfdApi.useLazyGetCarQuery();
   const [putOrder] = nfdApi.usePutOrderMutation();
   const [deleteorder] = nfdApi.useDeleteOrderMutation();
@@ -52,12 +57,6 @@ const EditOrder: FC = () => {
   });
 
   useEffect(() => {
-    if (currentCarImg) {
-      dispatch(updateCarCurrentImg(''));
-    }
-  }, [currentCarImg]);
-
-  useEffect(() => {
     if (statusRequest?.data) {
       const filteredData = statusRequest.data.map((item) => ({
         name: item.name,
@@ -71,7 +70,7 @@ const EditOrder: FC = () => {
   useEffect(() => {
     if (pointRequest?.data) {
       const filteredData = pointRequest.data.map((item) => ({
-        name: `${item.cityId.name}, ${item.address}`,
+        name: `${item.cityId?.name}, ${item.address}`,
         id: item.id,
       }));
 
@@ -103,6 +102,7 @@ const EditOrder: FC = () => {
 
     if (currentCar) {
       getCar(currentCar);
+      dispatch(updateCarColors(null));
     }
   }, [currentCar]);
 
@@ -113,9 +113,6 @@ const EditOrder: FC = () => {
         id: item,
       }));
 
-      dispatch(
-        updateCarCurrentImg(carResponse.data.data.thumbnail?.path || ''),
-      );
       dispatch(updateCarColors(filteredData || []));
     }
   }, [carResponse, carListRequest]);
@@ -164,6 +161,19 @@ const EditOrder: FC = () => {
     [pointList],
   );
 
+  const imgPathHandler = useCallback(
+    (imgSrc: string, carId: string) => {
+      if (carResponse.data?.data && carId) {
+        return carId !== carResponse.data.data.id
+          ? loadingIcon
+          : carResponse.data.data.thumbnail?.path;
+      }
+
+      return imgSrc;
+    },
+    [carResponse.data],
+  );
+
   const deleteHandler = useCallback(() => {
     deleteorder(getIdFromParams(orderId as string)).then((data) => {
       const result = (
@@ -180,74 +190,79 @@ const EditOrder: FC = () => {
     });
   }, []);
 
+  const sumbitHandler = useFormConfirm(
+    putOrder as (data: object) => Promise<unknown>,
+    updateOrderSaveStatus,
+    ETableTypes.ORDER,
+  );
+
+  const onSubmit = useCallback<TFormikSubmit<IFormOrder>>(
+    (values, { setSubmitting }) => {
+      setTimeout(() => {
+        sumbitHandler({
+          id: getIdFromParams(orderId as string),
+          data: {
+            carId: {
+              id: values.car,
+            },
+            pointId: {
+              id: values.point,
+            },
+            orderStatusId: {
+              id: values.status,
+            },
+            isFullTank: values.tank,
+            isNeedChildChair: values.chair,
+            isRightWheel: values.wheel,
+            rateId: {
+              id: orderRequest?.data.rateId?.id || '',
+            },
+            price: values.price,
+            cityId: {
+              id: values.city,
+            },
+            color: values.color,
+            dateFrom: values.dateFrom,
+            dateTo: values.dateTo,
+          },
+        });
+
+        setSubmitting(false);
+      }, 400);
+    },
+    [orderId, orderRequest],
+  );
+
+  const initialValues = useMemo(() => {
+    return {
+      point: orderRequest?.data.pointId?.id || '',
+      rate: orderRequest?.data.rateId?.id || '',
+      status: orderRequest?.data.orderStatusId?.id || '',
+      color: orderRequest?.data.color || '',
+      car: orderRequest?.data.carId?.id || '',
+      tank: orderRequest?.data.isFullTank || false,
+      chair: orderRequest?.data.isNeedChildChair || false,
+      wheel: orderRequest?.data.isRightWheel || false,
+      dateFrom: orderRequest?.data.dateFrom || 0,
+      dateTo: orderRequest?.data.dateTo || 0,
+      totalTime:
+        (orderRequest?.data?.dateTo || 0) - (orderRequest?.data?.dateFrom || 0),
+      price: orderRequest?.data.price || 0,
+      city: orderRequest?.data.cityId?.id || '',
+      imgSrc: orderRequest?.data.carId?.thumbnail?.path || '',
+    };
+  }, [orderRequest]);
+
   return isFetching ? (
     <Spin loading={isFetching} />
   ) : (
     <main className={cl.container}>
       <Formik
-        initialValues={{
-          point: orderRequest?.data.pointId?.id || '',
-          rate: orderRequest?.data.rateId?.id || '',
-          status: orderRequest?.data.orderStatusId?.id || '',
-          color: orderRequest?.data.color || '',
-          car: orderRequest?.data.carId?.id || '',
-          tank: orderRequest?.data.isFullTank || false,
-          chair: orderRequest?.data.isNeedChildChair || false,
-          wheel: orderRequest?.data.isRightWheel || false,
-          dateFrom: orderRequest?.data.dateFrom || 0,
-          dateTo: orderRequest?.data.dateTo || 0,
-          totalTime:
-            (orderRequest?.data?.dateTo || 0) -
-            (orderRequest?.data?.dateFrom || 0),
-          price: orderRequest?.data.price || 0,
-          city: orderRequest?.data.cityId?.id || '',
-          imgSrc:
-            currentCarImg || orderRequest?.data.carId?.thumbnail?.path || '',
-        }}
+        initialValues={initialValues}
         validationSchema={ORDER_VALIDATION}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            putOrder({
-              id: getIdFromParams(orderId as string),
-              data: {
-                carId: {
-                  id: values.car,
-                },
-                pointId: {
-                  id: values.point,
-                },
-                orderStatusId: {
-                  id: values.status,
-                },
-                isFullTank: values.tank,
-                isNeedChildChair: values.chair,
-                isRightWheel: values.wheel,
-                rateId: {
-                  id: orderRequest?.data.rateId?.id || '',
-                },
-                price: values.price,
-                cityId: {
-                  id: values.city,
-                },
-                color: values.color,
-                dateFrom: values.dateFrom,
-                dateTo: values.dateTo,
-              },
-            }).then((data) => {
-              const result = (data as { data: unknown }).data;
-
-              dispatch(updateOrderSaveStatus(Boolean(result)));
-              setTimeout(() => {
-                dispatch(updateOrderSaveStatus(null));
-              }, 4000);
-              navigate('/admin/order');
-            });
-
-            setSubmitting(false);
-          }, 400);
-        }}
+        onSubmit={onSubmit}
       >
         {({ values }) => (
           <Form className={cl.form}>
@@ -255,7 +270,7 @@ const EditOrder: FC = () => {
               <div className={cl.carInfoBox}>
                 <img
                   className={cl.carImage}
-                  src={values.imgSrc || noPhotoIcon}
+                  src={imgPathHandler(values.imgSrc, values.car) || noPhotoIcon}
                   alt={values.car || NO_PHOTO}
                   draggable={false}
                 />
@@ -299,6 +314,7 @@ const EditOrder: FC = () => {
               />
               <EditButtonList
                 formType={ETableFormTypes.EDIT}
+                pageType={ETableTypes.ORDER}
                 deleteHandler={deleteHandler}
               />
             </div>
