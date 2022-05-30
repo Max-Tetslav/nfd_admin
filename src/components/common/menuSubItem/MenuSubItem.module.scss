@@ -9,12 +9,14 @@
   left: 0;
   padding-left: 58px;
   color: inherit;
-  transition: all 1s ease;
+  transition: all 0.5s ease;
 
   &:hover,
   &:active,
   &:focus {
-    color: var(--font-color);
+    a {
+      color: var(--font-color);
+    }
   }
 }
 

@@ -8,15 +8,11 @@
   position: relative;
   list-style: none;
   border-bottom: 1px solid var(--gray-background);
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
   cursor: pointer;
 
-  &:hover,
-  &:active,
-  &:focus {
-    color: var(--blue-primary);
-    background: var(--hover-background);
-    box-shadow: inset 0 -1px 0 var(--hover-shadow), inset 4px 0 0 var(--blue-primary);
+  svg path {
+    transition: all 0.5s ease;
   }
 
   .link {
@@ -35,20 +31,43 @@
     text-decoration: none;
     color: var(--font-color);
   }
+
+  &.active {
+    background: var(--hover-background);
+    box-shadow: inset 0 -1px 0 var(--hover-shadow), inset 4px 0 0 var(--blue-primary);
+
+    .link {
+      color: var(--blue-primary);
+    }
+
+    svg path {
+      fill: var(--blue-primary);
+    }
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    background: var(--hover-background);
+    box-shadow: inset 0 -1px 0 var(--hover-shadow), inset 4px 0 0 var(--blue-primary);
+
+    .link {
+      color: var(--blue-primary);
+    }
+
+    svg path {
+      fill: var(--blue-primary);
+    }
+  }
 }
 
 .text {
+  margin-left: 32px;
   display: inline-block;
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
-  transition: all 1s ease;
-}
-
-.active {
-  color: var(--blue-primary);
-  background: var(--hover-background);
-  box-shadow: inset 0 -1px 0 var(--hover-shadow), inset 4px 0 0 var(--blue-primary);
+  transition: all 0.5s ease;
 }
 
 .addMode {

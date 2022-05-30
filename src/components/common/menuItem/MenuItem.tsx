@@ -25,9 +25,9 @@ const MenuItem: React.FC<IMenuItemProps> = ({
   return (
     <li className={classes}>
       <Link className={cl.link} to={isAddMode && sub ? sub.page : page}>
-        <img className={cl.img} src={img} alt="" />
+        {img}
         <span className={textClasses}>{text}</span>
-        {sub ? <MenuSubItem text={sub.text} isActive={isAddMode} /> : null}
+        {sub && <MenuSubItem text={sub.text} isActive={isAddMode} />}
       </Link>
     </li>
   );
