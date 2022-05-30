@@ -1,8 +1,14 @@
-import React, { ChangeEvent, useCallback, useMemo } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useField, useFormikContext } from 'formik';
 import classNames from 'classnames';
 import { Input } from 'antd';
-import { IOrderFormValues } from '@models/app';
+import { IFormOrder } from '@models/app';
 import getCalendarDateFormat from '@utils/helpers/getCalendarDateFormat';
 import clearIcon from '@assets/svg/clearDatepicker.svg';
 import cl from './EditDatepicker.module.scss';
@@ -21,7 +27,16 @@ const EditDatepicker: React.FC<IFilterSelectProps> = ({
   ...props
 }) => {
   const [field, , helpers] = useField(props);
-  const { values, setFieldValue } = useFormikContext<IOrderFormValues>();
+  const { values, setFieldValue } = useFormikContext<IFormOrder>();
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  useEffect(() => {
+    if (values.totalTime) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, []);
 
   const changeHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const dateTo = new Date(e.target.value).getTime() + values.totalTime;
@@ -31,7 +46,7 @@ const EditDatepicker: React.FC<IFilterSelectProps> = ({
   }, []);
 
   const allowClear = useMemo(() => {
-    if (props.readonly) {
+    if (props.readonly || isDisabled) {
       return false;
     }
     return {
@@ -45,12 +60,16 @@ const EditDatepicker: React.FC<IFilterSelectProps> = ({
         />
       ),
     };
-  }, [props.readonly]);
+  }, [props.readonly, isDisabled]);
 
   const minDate = useMemo(() => getCalendarDateFormat(field.value), []);
 
+  const classes = classNames(cl.container, {
+    [cl.disabled]: isDisabled || props.readonly,
+  });
+
   return (
-    <label className={cl.container} htmlFor={field.name}>
+    <label className={classes} htmlFor={field.name}>
       <span className={cl.title}>{label}</span>
       <Input
         value={getCalendarDateFormat(field.value)}
@@ -63,10 +82,13 @@ const EditDatepicker: React.FC<IFilterSelectProps> = ({
         autoComplete="off"
         id={field.name}
         name={field.name}
-        readOnly={props.readonly}
+        readOnly={props.readonly || isDisabled}
         allowClear={allowClear}
-        disabled={props.readonly}
+        disabled={props.readonly || isDisabled}
       />
+      {(isDisabled || props.readonly) && (
+        <span className={cl.readonly}>Это поле только для чтения</span>
+      )}
     </label>
   );
 };

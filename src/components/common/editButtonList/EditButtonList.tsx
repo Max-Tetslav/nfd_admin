@@ -9,10 +9,15 @@ import cl from './EditButtonList.module.scss';
 
 interface IEditButtonList {
   formType: string;
+  pageType: string;
   deleteHandler?: (id?: string) => void;
 }
 
-const EditButtonList: FC<IEditButtonList> = ({ formType, deleteHandler }) => {
+const EditButtonList: FC<IEditButtonList> = ({
+  formType,
+  deleteHandler,
+  pageType,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isSubmitting } = useFormikContext();
@@ -23,24 +28,10 @@ const EditButtonList: FC<IEditButtonList> = ({ formType, deleteHandler }) => {
   }, []);
 
   const cancelHandler = useCallback(() => {
-    if (location.pathname.includes('category')) {
-      navigate('/admin/category');
-    } else if (location.pathname.includes('city')) {
-      navigate('/admin/city');
-    } else if (location.pathname.includes('point')) {
-      navigate('/admin/point');
-    } else if (location.pathname.includes('rate')) {
-      navigate('/admin/rate');
-    } else if (location.pathname.includes('tariffType')) {
-      navigate('/admin/tariffType');
-    } else if (location.pathname.includes('status')) {
-      navigate('/admin/status');
-    } else if (location.pathname.includes('car')) {
-      navigate('/admin/car');
-    } else if (location.pathname.includes('order')) {
-      navigate('/admin/order');
+    if (location.pathname.includes(pageType)) {
+      navigate(`/admin/${pageType}`);
     }
-  }, [location]);
+  }, [pageType]);
 
   return (
     <div className={cl.container}>

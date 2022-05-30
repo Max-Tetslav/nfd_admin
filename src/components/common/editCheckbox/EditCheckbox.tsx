@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useCallback } from 'react';
 import { useField, useFormikContext } from 'formik';
-import { ICarFormValues } from '@models/app';
+import { IFormCar } from '@models/app';
 import Checkbox from '../checkbox/Checkbox';
 
 interface IFilterSelectProps {
@@ -12,7 +12,7 @@ interface IFilterSelectProps {
 
 const EditCheckbox: React.FC<IFilterSelectProps> = ({ label, ...props }) => {
   const [field, , helpers] = useField(props);
-  const { setFieldValue } = useFormikContext<ICarFormValues>();
+  const { setFieldValue } = useFormikContext<IFormCar>();
 
   const changeHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setFieldValue(field.name, e.target.checked);

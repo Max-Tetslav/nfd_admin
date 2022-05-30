@@ -17,17 +17,18 @@ const CarsList: React.FC<IOrderListProps> = ({
 }) => {
   return (
     <div className={cl.container}>
-      {cars.length === 0 && <NoData />}
-      {cars.length > 0
-        ? cars.map((item) => (
-            <CarCard
-              car={item}
-              deleteHandler={deleteHandler}
-              editHandler={editHandler}
-              key={item.id}
-            />
-          ))
-        : null}
+      {cars.length > 0 ? (
+        cars.map((item) => (
+          <CarCard
+            car={item}
+            deleteHandler={deleteHandler}
+            editHandler={editHandler}
+            key={item.id}
+          />
+        ))
+      ) : (
+        <NoData />
+      )}
     </div>
   );
 };

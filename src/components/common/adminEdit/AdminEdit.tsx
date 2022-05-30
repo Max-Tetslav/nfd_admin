@@ -6,7 +6,7 @@ import { updateCarColors, updateCarCurrent } from '@store/reducers/form';
 import {
   ETableFormTypes,
   ETableTypes,
-  IOrderFormValues,
+  IFormOrder,
   TTableFormTypes,
 } from '@models/app';
 import AuthInput from '../authInput/AuthInput';
@@ -36,27 +36,27 @@ const AdminEdit: FC<IAdminEditProps> = ({ type, formType }) => {
   );
 
   useEffect(() => {
-    dispatch(updateCarCurrent((values as IOrderFormValues).car));
+    dispatch(updateCarCurrent((values as IFormOrder).car));
 
-    if ((values as IOrderFormValues)?.car) {
-      if ((touched as IOrderFormValues)?.car) {
+    if ((values as IFormOrder)?.car) {
+      if ((touched as IFormOrder)?.car) {
         dispatch(updateCarColors(null));
         setFieldValue('color', '');
       }
     }
-  }, [(values as IOrderFormValues)?.car]);
+  }, [(values as IFormOrder)?.car]);
 
   useEffect(() => {
-    if ((values as IOrderFormValues)?.point) {
-      if ((touched as IOrderFormValues)?.point) {
+    if ((values as IFormOrder)?.point) {
+      if ((touched as IFormOrder)?.point) {
         const cityId =
           pointDataList?.filter(
-            (item) => item.point === (values as IOrderFormValues)?.point,
+            (item) => item.point === (values as IFormOrder)?.point,
           )[0]?.city || '';
         setFieldValue('city', cityId);
       }
     }
-  }, [(values as IOrderFormValues)?.point]);
+  }, [(values as IFormOrder)?.point]);
 
   const content = useMemo(() => {
     switch (type) {
@@ -154,7 +154,7 @@ const AdminEdit: FC<IAdminEditProps> = ({ type, formType }) => {
               labelClass={cl.label}
               label="Длительность"
               type="text"
-              name="duration"
+              name="unit"
               adminPage
             />
           </>

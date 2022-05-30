@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 export const RATE_TYPE_VALIDATION = Yup.object({
   name: Yup.string().required('Обязательное поле!'),
-  duration: Yup.string().required('Обязательное поле!'),
+  unit: Yup.string().required('Обязательное поле!'),
 });
 
 export const CAR_VALIDATION = Yup.object({

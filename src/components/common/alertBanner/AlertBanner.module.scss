@@ -7,6 +7,7 @@
   transform-origin: top;
   transition: all 0.5s ease;
   animation: 0.5s appear, 1s linear 3.5s disappear;
+  z-index: 98;
 
   @media screen and (max-width: 500px) {
     top: 136px;

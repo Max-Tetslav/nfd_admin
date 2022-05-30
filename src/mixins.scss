@@ -59,13 +59,14 @@
   letter-spacing: -0.3457px;
   color: var(--white);
   background-color: var(--blue-primary);
+  transition: all 0.3s ease;
 
-  &:hover {
-    outline: none;
-  }
-
+  &:hover,
+  &:focus,
   &:active {
     outline: none;
+    background-color: var(--blue-dark);
+    border-color: var(--blue-dark);
   }
 
   &:disabled {
@@ -79,6 +80,19 @@
 @mixin dangerButton {
 /* stylelint-enable */
   background-color: var(--red-primary);
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: var(--red-dark);
+    border-color: var(--red-dark);
+  }
+
+  &:disabled {
+    color: var(--border-color);
+    border-color: var(--border-color);
+    background-color: var(--gray-background);
+  }
 }
 
 /* stylelint-disable */
@@ -87,6 +101,13 @@
   border-color: var(--border-color);
   color: var(--font-color);
   background-color: var(--neutral-button);
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: var(--neutral-dark);
+    border-color: var(--neutral-dark);
+  }
 }
 
 /* stylelint-disable */

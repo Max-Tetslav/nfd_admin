@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import { Button } from 'antd';
+import useModalConfirm from '@hooks/useModalConfirm/useModalConfirm';
 import { IOrderData, TPostOrderData } from '@models/data';
 import completeIcon from '@assets/svg/complete.svg';
 import cancelIcon from '@assets/svg/cancel.svg';
@@ -9,12 +10,12 @@ import noPhotoIcon from '@assets/svg/no-photo.svg';
 import formatPrice from '@utils/helpers/formatPrice';
 import formatDate from '@utils/helpers/formatDate';
 import { NO_PHOTO } from '@utils/constants/tables';
-import useModalConfirm from '@hooks/useModalConfirm/useModalConfirm';
 import {
   updateOrderStatusCancel,
   updateOrderStatusComplete,
 } from '@store/reducers/form';
 import { useAppDispatch } from '@store/store';
+import { CANCEL_STATUS_ID, COMPLETE_STATUS_ID } from '@utils/constants/api';
 import OrderCheckList from '../orderCheckList/OrderCheckList';
 import cl from './OrderCard.module.scss';
 
@@ -74,37 +75,33 @@ const OrderCard: React.FC<IOrderCardProps> = ({
   }, []);
 
   const completeHandler = useCallback(() => {
-    actionHandler(id, getUpdatedOrder('6278c4ba9535e90010bfaf36')).then(
-      (data) => {
-        const result = (
-          data as {
-            data: unknown;
-          }
-        ).data;
+    actionHandler(id, getUpdatedOrder(COMPLETE_STATUS_ID)).then((data) => {
+      const result = (
+        data as {
+          data: unknown;
+        }
+      ).data;
 
-        dispatch(updateOrderStatusComplete(Boolean(result)));
-        setTimeout(() => {
-          dispatch(updateOrderStatusComplete(null));
-        }, 4000);
-      },
-    );
+      dispatch(updateOrderStatusComplete(Boolean(result)));
+      setTimeout(() => {
+        dispatch(updateOrderStatusComplete(null));
+      }, 4000);
+    });
   }, []);
 
   const cancelHandler = useCallback(() => {
-    actionHandler(id, getUpdatedOrder('5e26a1f5099b810b946c5d8c')).then(
-      (data) => {
-        const result = (
-          data as {
-            data: unknown;
-          }
-        ).data;
+    actionHandler(id, getUpdatedOrder(CANCEL_STATUS_ID)).then((data) => {
+      const result = (
+        data as {
+          data: unknown;
+        }
+      ).data;
 
-        dispatch(updateOrderStatusCancel(Boolean(result)));
-        setTimeout(() => {
-          dispatch(updateOrderStatusCancel(null));
-        }, 4000);
-      },
-    );
+      dispatch(updateOrderStatusCancel(Boolean(result)));
+      setTimeout(() => {
+        dispatch(updateOrderStatusCancel(null));
+      }, 4000);
+    });
   }, []);
 
   const onCancel = useCallback(() => {

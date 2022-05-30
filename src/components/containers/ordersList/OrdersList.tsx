@@ -17,17 +17,18 @@ const OrdersList: React.FC<IOrderListProps> = ({
 }) => {
   return (
     <div className={cl.container}>
-      {orders.length === 0 && <NoData />}
-      {orders.length > 0
-        ? orders.map((item) => (
-            <OrderCard
-              order={item}
-              actionHandler={actionHandler}
-              editHandler={editHandler}
-              key={item.id}
-            />
-          ))
-        : null}
+      {orders.length > 0 ? (
+        orders.map((item) => (
+          <OrderCard
+            order={item}
+            actionHandler={actionHandler}
+            editHandler={editHandler}
+            key={item.id}
+          />
+        ))
+      ) : (
+        <NoData />
+      )}
     </div>
   );
 };

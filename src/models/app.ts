@@ -1,3 +1,4 @@
+import { FormikHelpers } from 'formik';
 import { ReactNode } from 'react';
 
 export interface IOrderOptionItem {
@@ -10,7 +11,7 @@ export interface IOrderOptionItem {
 export interface IMenuItem {
   text: string;
   page: string;
-  img: string;
+  img: ReactNode;
   id: number;
   sub?: {
     text: string;
@@ -35,7 +36,7 @@ export enum ETableTypes {
   CITY = 'city',
   ORDER = 'order',
   RATE = 'rate',
-  RATE_TYPE = 'rateType',
+  RATE_TYPE = 'tariffType',
   STATUS = 'status',
   CAR = 'car',
   POINT = 'point',
@@ -48,15 +49,50 @@ export enum ETableFormTypes {
 
 export type TTableFormTypes = ETableFormTypes.ADD | ETableFormTypes.EDIT;
 
-export interface ICarFormValues {
+export interface IPointDataList {
+  city: string;
+  point: string;
+}
+
+export type TFormikSubmit<T> = (
+  values: T,
+  { setSubmitting }: FormikHelpers<T>,
+) => void;
+
+export interface IFormRateType {
+  name: string;
+  unit: string;
+}
+
+export interface IFormRate {
+  rateType: string;
+  price: number;
+}
+
+export interface IFormPoint {
+  name: string;
+  city: string;
+  address: string;
+}
+
+export interface IFormName {
+  name: string;
+}
+
+export interface IFormCategory {
+  name: string;
+  description: string;
+}
+
+export interface IFormCar {
   model: string;
   category: string;
   number: string;
-  minPrice: string;
-  maxPrice: string;
-  tank: string;
+  minPrice: number;
+  maxPrice: number;
+  tank: number;
   description: string;
-  imgSize: string;
+  imgSize: number;
   imgType: string;
   imgSrc: string;
   imgName: string;
@@ -64,7 +100,7 @@ export interface ICarFormValues {
   colorList: string[];
 }
 
-export interface IOrderFormValues {
+export interface IFormOrder {
   point: string;
   rate: string;
   status: string;
@@ -78,9 +114,5 @@ export interface IOrderFormValues {
   totalTime: number;
   price: number;
   city: string;
-}
-
-export interface IPointDataList {
-  city: string;
-  point: string;
+  imgSrc: string;
 }

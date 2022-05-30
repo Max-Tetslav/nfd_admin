@@ -1,11 +1,11 @@
 import React, { FC, useEffect } from 'react';
 import { useFormikContext } from 'formik';
-import { IOrderFormValues } from '@models/app';
+import { IFormOrder } from '@models/app';
 import formatPrice from '@utils/helpers/formatPrice';
 
 const OrderEditPrice: FC = () => {
   const { values, touched, setFieldValue, isSubmitting } =
-    useFormikContext<IOrderFormValues>();
+    useFormikContext<IFormOrder>();
 
   useEffect(() => {
     if (touched.chair && !isSubmitting) {

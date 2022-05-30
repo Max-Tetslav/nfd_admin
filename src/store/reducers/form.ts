@@ -8,7 +8,6 @@ interface IFormInitialState {
     completeList: string[];
     list: INameAndID[] | null;
     colors: INameAndID[] | null;
-    currentImg: string;
     save: {
       ok: boolean | null;
     };
@@ -17,7 +16,6 @@ interface IFormInitialState {
     };
   };
   city: {
-    current: string;
     list: INameAndID[] | null;
     save: {
       ok: boolean | null;
@@ -28,7 +26,6 @@ interface IFormInitialState {
   };
   rateType: {
     list: INameAndID[] | null;
-    current: '';
     save: {
       ok: boolean | null;
     };
@@ -37,7 +34,6 @@ interface IFormInitialState {
     };
   };
   category: {
-    current: string;
     save: {
       ok: boolean | null;
     };
@@ -48,7 +44,6 @@ interface IFormInitialState {
   point: {
     list: INameAndID[] | null;
     dataList: IPointDataList[] | null;
-    current: string;
     save: {
       ok: boolean | null;
     };
@@ -58,7 +53,6 @@ interface IFormInitialState {
   };
   status: {
     list: INameAndID[] | null;
-    current: string;
     save: {
       ok: boolean | null;
     };
@@ -67,7 +61,6 @@ interface IFormInitialState {
     };
   };
   order: {
-    current: string;
     save: {
       ok: boolean | null;
     };
@@ -81,7 +74,6 @@ interface IFormInitialState {
   };
   rate: {
     list: INameAndID[] | null;
-    current: string;
     save: {
       ok: boolean | null;
     };
@@ -97,7 +89,6 @@ const initialState: IFormInitialState = {
     completeList: [],
     list: null,
     colors: null,
-    currentImg: '',
     save: {
       ok: null,
     },
@@ -106,7 +97,6 @@ const initialState: IFormInitialState = {
     },
   },
   city: {
-    current: '',
     list: null,
     save: {
       ok: null,
@@ -117,7 +107,6 @@ const initialState: IFormInitialState = {
   },
   rateType: {
     list: null,
-    current: '',
     save: {
       ok: null,
     },
@@ -126,7 +115,6 @@ const initialState: IFormInitialState = {
     },
   },
   category: {
-    current: '',
     save: {
       ok: null,
     },
@@ -137,7 +125,6 @@ const initialState: IFormInitialState = {
   point: {
     list: null,
     dataList: null,
-    current: '',
     save: {
       ok: null,
     },
@@ -147,7 +134,6 @@ const initialState: IFormInitialState = {
   },
   status: {
     list: null,
-    current: '',
     save: {
       ok: null,
     },
@@ -156,7 +142,6 @@ const initialState: IFormInitialState = {
     },
   },
   order: {
-    current: '',
     save: {
       ok: null,
     },
@@ -170,7 +155,6 @@ const initialState: IFormInitialState = {
   },
   rate: {
     list: null,
-    current: '',
     save: {
       ok: null,
     },
@@ -228,9 +212,6 @@ const carFormSlice = createSlice({
     updateCarCurrent: (state, action: PayloadAction<string | null>) => {
       state.car.current = action.payload;
     },
-    updateCarCurrentImg: (state, action: PayloadAction<string>) => {
-      state.car.currentImg = action.payload;
-    },
     updateCarColors: (state, action: PayloadAction<INameAndID[] | null>) => {
       state.car.colors = action.payload;
     },
@@ -242,24 +223,6 @@ const carFormSlice = createSlice({
     },
     updatePointDataList: (state, action: PayloadAction<IPointDataList[]>) => {
       state.point.dataList = action.payload;
-    },
-    updateRateCurrent: (state, action: PayloadAction<string>) => {
-      state.rate.current = action.payload;
-    },
-    updateCategoryCurrent: (state, action: PayloadAction<string>) => {
-      state.category.current = action.payload;
-    },
-    updateStatusCurrent: (state, action: PayloadAction<string>) => {
-      state.status.current = action.payload;
-    },
-    updatePointCurrent: (state, action: PayloadAction<string>) => {
-      state.point.current = action.payload;
-    },
-    updateCityCurrent: (state, action: PayloadAction<string>) => {
-      state.city.current = action.payload;
-    },
-    updateOrderCurrent: (state, action: PayloadAction<string>) => {
-      state.order.current = action.payload;
     },
     updateCarSaveStatus: (state, action: PayloadAction<boolean | null>) => {
       state.car.save.ok = action.payload;
@@ -340,20 +303,13 @@ export const {
   pushCompleteList,
   popCompleteList,
   updateCityList,
-  updateOrderCurrent,
-  updateCityCurrent,
-  updatePointCurrent,
-  updateStatusCurrent,
   updateCarCurrent,
-  updateCategoryCurrent,
-  updateRateCurrent,
   updateRateTypeList,
   updateRateList,
   updateCarList,
   updateStatusList,
   updatePointList,
   updateCarColors,
-  updateCarCurrentImg,
   updateStatusSaveStatus,
   updateStatusDeleteStatus,
   updateRateTypeSaveStatus,

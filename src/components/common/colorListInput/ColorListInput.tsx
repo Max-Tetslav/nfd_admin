@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Field, useField, useFormikContext } from 'formik';
 import classNames from 'classnames';
 import { Button, Checkbox } from 'antd';
-import { ICarFormValues } from '@models/app';
+import { IFormCar } from '@models/app';
 import plusIcon from '@assets/svg/plus.svg';
 import cl from './ColorListInput.module.scss';
 
@@ -30,7 +30,7 @@ const ColorListInput: React.FC<IAuthInput> = ({
 }) => {
   const [field, meta, helpers] = useField(props);
   const { values, setFieldValue, setFieldError, errors } =
-    useFormikContext<ICarFormValues>();
+    useFormikContext<IFormCar>();
 
   const errorClasses = classNames(cl.error, {
     [cl.errorColor]: meta.error,

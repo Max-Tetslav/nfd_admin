@@ -106,14 +106,20 @@ const AlertBanner: FC = () => {
 
       let message: string;
 
-      if (orderAction === 'complete') {
-        message = 'Успех! Cтатус заказа изменен на "Завершенный"';
-      } else if (orderAction === 'cancel') {
-        message = 'Успех! Cтатус заказа изменен на "Отмененный"';
-      } else if (status === 'success') {
-        message = `Успех, ${itemName} ${actionName}!`;
-      } else {
-        message = 'Ошибка! К сожалению, не удалось выполнить запрос';
+      switch (orderAction) {
+        case 'complete':
+          message = 'Успех! Cтатус заказа изменен на "Завершенный"';
+          break;
+        case 'cancel':
+          message = 'Успех! Cтатус заказа изменен на "Отмененный"';
+          break;
+        default:
+          if (status === 'success') {
+            message = `Успех, ${itemName} ${actionName}!`;
+          } else {
+            message = 'Ошибка! К сожалению, не удалось выполнить запрос';
+          }
+          break;
       }
 
       const icon = (

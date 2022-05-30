@@ -39,11 +39,13 @@ const AppSelect: FC<IAppSelectProps> = ({
 
   const selectValue = useMemo(() => {
     if (list) {
-      if (list.length) {
-        return value;
-      }
-      if (list.length === 0) {
-        return '';
+      switch (list.length) {
+        case 0:
+          return '';
+          break;
+        default:
+          return value;
+          break;
       }
     } else {
       return 'Подождите, идет загрузка...';
@@ -69,13 +71,12 @@ const AppSelect: FC<IAppSelectProps> = ({
       disabled={isDisabled}
       notFoundContent={<NoData />}
     >
-      {list
-        ? list.map((item) => (
-            <Option title={item.name} value={item.id} key={item.id}>
-              {item.name}
-            </Option>
-          ))
-        : null}
+      {list &&
+        list.map((item) => (
+          <Option title={item.name} value={item.id} key={item.id}>
+            {item.name}
+          </Option>
+        ))}
     </Select>
   );
 };
