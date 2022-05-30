@@ -137,7 +137,7 @@ const TableOrders: React.FC = () => {
 
     let list: ReactNode;
 
-    if (orderRequest?.data[0].id === orders[0]?.id) {
+    if (orderRequest?.data[0]?.id === orders[0]?.id) {
       list = (
         <OrdersList
           orders={orders}

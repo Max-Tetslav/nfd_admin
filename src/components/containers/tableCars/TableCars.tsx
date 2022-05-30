@@ -119,7 +119,7 @@ const TableCars: FC = () => {
 
     let list: ReactNode;
 
-    if (carRequest?.data[0].id === cars[0]?.id) {
+    if (carRequest?.data[0]?.id === cars[0]?.id) {
       list = (
         <CarsList
           cars={cars}
