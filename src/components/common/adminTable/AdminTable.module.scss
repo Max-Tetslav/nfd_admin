@@ -1,11 +1,13 @@
+@import "../../../mixins.scss";
+
+/* stylelint-disable */
+@include fadein;
+/* stylelint-enable */
+
 .container {
   height: 100%;
-  opacity: 0;
+  animation: 0.5s fadein;
   transition: all 0.5s ease;
-}
-
-.loaded {
-  opacity: 1;
 }
 
 .noFilters {

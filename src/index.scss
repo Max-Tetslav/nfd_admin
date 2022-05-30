@@ -25,8 +25,10 @@
 :root {
   --green-primary: #0ec261;
   --blue-primary: #007bff;
+  --blue-dark: #0062cc;
   --black-primary: #121212;
   --red-primary: #c4183c;
+  --red-dark: #9c1330;
   --white: #fff;
   --gray: #999;
   --gray-background: #f5f6f8;
@@ -37,8 +39,16 @@
   --hover-shadow: #e1e5eb;
   --font-input: #767f9d;
   --font-copyright: #818ea3;
+  --font-dark-car-form: #868e96;
   --font-error-code: #cacedb;
   --font-username: #5a6169;
+  --neutral-button: #e9ecef;
+  --neutral-dark: #b2bcc7;
+  --box-shadow:
+    0 1px 75px rgba(90 97 105 / 11%),
+    0 2px 4px rgba(90 97 105 / 12%),
+    0 7.5px 11px rgba(90 97 105 / 10%),
+    0 3.5px 17.5px rgba(165 182 201 / 10%);
 }
 
 * {
@@ -122,6 +132,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
 .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
   height: 100%;
+  border: none;
 }
 
 .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
@@ -164,6 +175,44 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 .ant-table-tbody > tr.ant-table-row:hover > td, .ant-table-tbody > tr > td.ant-table-cell-row-hover,
 .ant-table-thead > tr > th {
   background: var(--white);
+}
+
+.ant-progress-inner {
+  background-color: var(--white);
+  box-shadow: inset 0px 0.5px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+}
+
+.ant-progress-show-info .ant-progress-outer {
+  margin-right: 0;
+  padding-right: 0;
+}
+
+.ant-progress-text {
+  position: absolute;
+  right: 0;
+  top: -15px;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  text-align: center;
+  letter-spacing: -0.3457px;
+  color: var(--font-color);
+}
+
+.ant-alert-message {
+  color: var(--white);
+}
+
+.ant-upload {
+  width: 100%;
+}
+
+.ant-modal-confirm .ant-modal-confirm-btns {
+  display: flex;
+  width: 100%;
 }
 
 /* stylelint-enable */

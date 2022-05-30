@@ -23,4 +23,8 @@
   line-height: 15px;
   letter-spacing: -0.0928px;
   color: var(--font-input);
+
+  @media screen and (max-width: 1150px) {
+    padding-left: 60px;
+  }
 }

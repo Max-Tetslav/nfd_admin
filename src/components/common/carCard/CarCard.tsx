@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import { Button } from 'antd';
 import { ICar } from '@models/data';
@@ -10,6 +10,8 @@ import cl from './CarCard.module.scss';
 
 interface ICarCardProps {
   car: ICar;
+  deleteHandler: (id: string) => void;
+  editHandler: (id: string) => void;
 }
 
 const CarCard: React.FC<ICarCardProps> = ({
@@ -21,9 +23,20 @@ const CarCard: React.FC<ICarCardProps> = ({
     colors,
     description,
     categoryId,
+    id,
     thumbnail: { path },
   },
+  deleteHandler,
+  editHandler,
 }) => {
+  const onEdit = useCallback(() => {
+    editHandler(id);
+  }, []);
+
+  const onDelete = useCallback(() => {
+    deleteHandler(id);
+  }, []);
+
   return (
     <div className={cl.container}>
       <p className={cl.model}>{name}</p>
@@ -44,14 +57,14 @@ const CarCard: React.FC<ICarCardProps> = ({
       <div className={cl.buttonBox}>
         <Button
           className={classNames(cl.button, cl.cancelButton)}
-          // onClick={cancelHandler}
+          onClick={onDelete}
           icon={<img className={cl.buttonIcon} src={cancelIcon} alt="cancel" />}
         >
           Удалить
         </Button>
         <Button
           className={classNames(cl.button, cl.editButton)}
-          // onClick={editHandler}
+          onClick={onEdit}
           icon={<img className={cl.buttonIcon} src={editIcon} alt="edit" />}
         >
           Изменить

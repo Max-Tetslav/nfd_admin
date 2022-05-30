@@ -4,10 +4,17 @@ import cl from './Spin.module.scss';
 
 interface ISpinProps {
   loading: boolean;
+  select?: boolean;
+  submit?: boolean;
 }
 
-const Spin: FC<ISpinProps> = ({ loading }) => {
-  const classes = classNames(cl.container, { [cl.closed]: !loading });
+const Spin: FC<ISpinProps> = ({ loading, select, submit }) => {
+  const classes = classNames(
+    cl.container,
+    { [cl.select]: select },
+    { [cl.submit]: submit },
+    { [cl.closed]: !loading },
+  );
 
   return <div className={classes} />;
 };

@@ -1,23 +1,20 @@
+@import "../../../mixins.scss";
+
+/* stylelint-disable */
+@include fadein;
+/* stylelint-enable */
+
 .container {
   position: absolute;
   top: calc(50% - 50px);
-  left: calc(50% + 50px);
+  left: calc(50% - 50px);
   width: 100px;
   height: 100px;
   border-radius: 50%;
   border-top: 4px solid var(--blue-primary);
   border-left: 2px solid var(--blue-primary);
   transition: all 0.5s ease;
-  animation: spin linear 2s infinite;
-
-  @media screen and (max-width: 1150px) {
-    left: calc(50% - 50px);
-  }
-}
-
-.closed {
-  opacity: 0;
-  transform: scale(0);
+  animation: 1s fadein, spin linear 2s infinite;
 }
 
 @keyframes spin {
@@ -28,4 +25,22 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.select {
+  top: 0;
+  left: -11px;
+  width: 13px;
+  height: 13px;
+  border-top: 1.5px solid var(--blue-primary);
+  border-left: 1px solid var(--blue-primary);
+}
+
+.submit {
+  top: initial;
+  left: initial;
+  width: 13px;
+  height: 13px;
+  border-top: 1.5px solid var(--white);
+  border-left: 1px solid var(--white);
 }

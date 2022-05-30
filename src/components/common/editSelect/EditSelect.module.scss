@@ -1,0 +1,35 @@
+.label {
+  position: relative;
+  width: 48%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 12px;
+  letter-spacing: -0.1842px;
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
+}
+
+.errorBorder {
+  border-color: var(--red-primary);
+  box-shadow: 0 2.5px 5.5px rgba(196 24 60 / 10%);
+}
+
+.error {
+  position: absolute;
+  left: 11px;
+  bottom: -16px;
+  display: flex;
+  align-items: center;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 11px;
+  letter-spacing: -0.1754px;
+  color: var(--red-primary);
+}

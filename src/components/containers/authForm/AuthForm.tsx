@@ -6,8 +6,9 @@ import { Button, notification } from 'antd';
 import Link from 'antd/lib/typography/Link';
 import nfdApi from '@services/api';
 import { useAppDispatch } from '@store/store';
-import { setLoginData } from '@store/reducers/auth';
+import { IRefreshResponse, setLoginData } from '@store/reducers/auth';
 import { EAuthInputTypes } from '@models/auth';
+import Spin from '@components/common/spin/Spin';
 import AuthInput from '@components/common/authInput/AuthInput';
 import { errorTitle, errorDescription } from '@utils/constants/auth';
 import cl from './AuthForm.module.scss';
@@ -34,11 +35,7 @@ const AuthForm: React.FC = () => {
     if (loginResp.data) {
       localStorage.setItem('accessToken', loginResp.data.access_token);
       localStorage.setItem('refreshToken', loginResp.data.refresh_token);
-      localStorage.setItem(
-        'tokenExpires',
-        loginResp.data.expires_in.toString(),
-      );
-      dispatch(setLoginData());
+      dispatch(setLoginData(loginResp as IRefreshResponse));
       navigate('/admin/order');
     }
   }, [loginResp]);
@@ -80,13 +77,8 @@ const AuthForm: React.FC = () => {
             <Link className={cl.link} href="/">
               Запросить доступ
             </Link>
-            <Button
-              className={cl.button}
-              htmlType="submit"
-              disabled={isSubmitting}
-              type="primary"
-            >
-              Войти
+            <Button className={cl.button} htmlType="submit" type="primary">
+              {isSubmitting ? <Spin loading={isSubmitting} submit /> : 'Войти'}
             </Button>
           </div>
         </Form>

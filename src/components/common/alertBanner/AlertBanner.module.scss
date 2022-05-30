@@ -1,0 +1,47 @@
+.container {
+  position: absolute;
+  width: 100%;
+  right: 0;
+  top: 68px;
+  height: 42px;
+  transform-origin: top;
+  transition: all 0.5s ease;
+  animation: 0.5s appear, 1s linear 3.5s disappear;
+  z-index: 98;
+
+  @media screen and (max-width: 500px) {
+    top: 136px;
+  }
+}
+
+.success {
+  background-color: var(--green-primary);
+}
+
+.error {
+  background-color: var(--red-primary);
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+}

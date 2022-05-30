@@ -1,6 +1,9 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import nfdApi from '@services/api';
-import { IPoint } from '@models/data';
+import { useAppDispatch } from '@store/store';
+import { updatePointDeleteStatus } from '@store/reducers/form';
+import { IPoint, IPostResponse, IRateType } from '@models/data';
 import AdminPagination from '@components/common/adminPagination/AdminPagination';
 import Spin from '@components/common/spin/Spin';
 import AdminTable from '@components/common/adminTable/AdminTable';
@@ -9,6 +12,9 @@ import { POINT_HEADERS } from '@utils/constants/tables';
 import cl from './TablePoints.module.scss';
 
 const TablePoints: FC = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [page, setPage] = useState(1);
   const {
     data: pointRequest,
@@ -18,6 +24,7 @@ const TablePoints: FC = () => {
   } = nfdApi.useGetPointListQuery({
     page: page - 1,
   });
+  const [deletePoint] = nfdApi.useDeletePointMutation();
 
   const [points, setPoints] = useState<IPoint[]>([]);
   const [total, setTotal] = useState(0);
@@ -34,6 +41,24 @@ const TablePoints: FC = () => {
       setPoints(pointRequest.data);
     }
   }, [page]);
+
+  const deleteHandler = useCallback((id?: string) => {
+    deletePoint(id).then((data) => {
+      const result = (
+        data as {
+          data: IPostResponse<IRateType>;
+        }
+      ).data;
+
+      dispatch(updatePointDeleteStatus(Boolean(result)));
+    });
+
+    setTimeout(() => dispatch(updatePointDeleteStatus(null)), 4000);
+  }, []);
+
+  const editHandler = useCallback((id: string) => {
+    navigate(`:${id}`);
+  }, []);
 
   const pagination = useMemo(() => {
     return total > 6 ? (
@@ -59,7 +84,13 @@ const TablePoints: FC = () => {
       <Spin loading={isFetching} />
     ) : (
       <>
-        <AdminTable data={points} headers={POINT_HEADERS} type="point" />
+        <AdminTable
+          data={points}
+          headers={POINT_HEADERS}
+          type="point"
+          deleteHandler={deleteHandler}
+          editHandler={editHandler}
+        />
         {pagination}
       </>
     );

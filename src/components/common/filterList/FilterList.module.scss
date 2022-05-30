@@ -1,11 +1,16 @@
+@import "../../../mixins.scss";
+
+/* stylelint-disable */
+@include fadein;
+/* stylelint-enable */
+
 .container {
   height: 60px;
   padding: 15px 22px;
   display: flex;
   justify-content: space-between;
   gap: 15px;
-  opacity: 0;
-  transition: all 0.5s ease;
+  animation: 1s fadein;
 
   @media screen and (max-width: 870px) {
     position: absolute;
@@ -21,7 +26,10 @@
     flex-direction: column;
     height: auto;
     justify-content: center;
-    z-index: -1;
+    z-index: 1;
+    opacity: 0;
+    transform: translateX(120%);
+    transition: all 1s ease;
   }
 
   .filterBox {
@@ -45,59 +53,20 @@
     }
 
     .button {
-      position: static;
-      width: 110px;
-      height: 29px;
-      padding: 7px;
-      border-radius: 4px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: Helvetica, sans-serif;
-      font-style: normal;
-      font-weight: 400;
-      font-size: 11px;
-      line-height: 13px;
-      text-align: center;
-      letter-spacing: -0.3457px;
-      color: var(--white);
-      background-color: var(--blue-primary);
-
-      &:hover {
-        outline: none;
-      }
-
-      &:active {
-        outline: none;
-      }
-
-      &:disabled {
-        color: var(--border-color);
-        border-color: var(--border-color);
-        background-color: var(--gray-background);
-      }
+      /* stylelint-disable */
+      @include button;
+      /* stylelint-enable */
     }
 
     .danger {
-      background-color: var(--red-primary);
+      /* stylelint-disable */
+      @include dangerButton;
+      /* stylelint-enable */
     }
-  }
-}
-
-.loaded {
-  opacity: 1;
-
-  @media screen and (max-width: 870px) {
-    opacity: 0;
   }
 }
 
 .opened {
-  z-index: 1;
   opacity: 1;
-  transform: scale(1);
-
-  @media screen and (min-width: 870px) {
-    transform: none;
-  }
+  transform: translateX(0);
 }

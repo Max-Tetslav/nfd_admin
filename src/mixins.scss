@@ -1,5 +1,20 @@
 /* stylelint-disable */
+@mixin fadein {
+  /* stylelint-enable */
+  @keyframes fadein {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+}
+
+/* stylelint-disable */
 @mixin adminMain {
+  @include fadein;
 /* stylelint-enable */
   width: 95%;
   height: 75%;
@@ -13,6 +28,7 @@
     0 7.5px 11px rgba(90 97 105 / 10%),
     0 3.5px 17.5px rgba(165 182 201 / 10%);
   border-radius: 9px;
+  animation: 1s fadein;
 
   @media screen and (max-width: 1024px) {
     width: 100%;
@@ -21,4 +37,103 @@
     justify-content: space-around;
     overflow: auto;
   }
+}
+
+/* stylelint-disable */
+@mixin button {
+/* stylelint-enable */
+  position: static;
+  width: 110px;
+  height: 29px;
+  padding: 7px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  letter-spacing: -0.3457px;
+  color: var(--white);
+  background-color: var(--blue-primary);
+  transition: all 0.3s ease;
+
+  &:hover,
+  &:focus,
+  &:active {
+    outline: none;
+    background-color: var(--blue-dark);
+    border-color: var(--blue-dark);
+  }
+
+  &:disabled {
+    color: var(--border-color);
+    border-color: var(--border-color);
+    background-color: var(--gray-background);
+  }
+}
+
+/* stylelint-disable */
+@mixin dangerButton {
+/* stylelint-enable */
+  background-color: var(--red-primary);
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: var(--red-dark);
+    border-color: var(--red-dark);
+  }
+
+  &:disabled {
+    color: var(--border-color);
+    border-color: var(--border-color);
+    background-color: var(--gray-background);
+  }
+}
+
+/* stylelint-disable */
+@mixin neutralButton {
+/* stylelint-enable */
+  border-color: var(--border-color);
+  color: var(--font-color);
+  background-color: var(--neutral-button);
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: var(--neutral-dark);
+    border-color: var(--neutral-dark);
+  }
+}
+
+/* stylelint-disable */
+@mixin simpleTable {
+  @include fadein;
+  @include adminMain;
+  /* stylelint-enable */
+
+  .form {
+    height: 100%;
+    padding: 0 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    animation: 1s fadein;
+    transition: all 1s ease;
+  }
+}
+
+/* stylelint-disable */
+@mixin page {
+  @include fadein;
+  /* stylelint-enable */
+
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  animation: 1s fadein;
 }

@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react';
-import { useAppSelector } from '@store/store';
 import { Navigate } from 'react-router-dom';
 
 interface IRequireAuth {
@@ -7,7 +6,8 @@ interface IRequireAuth {
 }
 
 const RequireAuth: React.FC<IRequireAuth> = ({ children }) => {
-  const isAuth = useAppSelector((state) => state.auth.status);
+  const isAuth =
+    localStorage.getItem('accessToken') || localStorage.getItem('refreshToken');
 
   if (!isAuth) {
     return <Navigate to="/" />;

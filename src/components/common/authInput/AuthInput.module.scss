@@ -10,6 +10,13 @@
   letter-spacing: -0.1842px;
 
   .input {
+    font-family: Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 13px;
+    letter-spacing: -0.1929px;
+    color: var(--black-primary);
     width: 100%;
     height: 29px;
     margin-top: 7px;
@@ -27,8 +34,15 @@
     }
   }
 
+  .textarea {
+    height: 60px;
+    resize: none;
+    padding: 6px 11px;
+  }
+
   .errorBorder {
     border: 1px solid var(--red-primary);
+    box-shadow: 0 2.5px 5.5px rgba(196 24 60 / 10%);
   }
 
   .error {
@@ -42,6 +56,18 @@
     font-size: 10px;
     line-height: 11px;
     letter-spacing: -0.1754px;
+  }
+
+  .adminPageError {
+    display: block;
+    margin-top: 6px;
+    margin-left: 6px;
+    position: static;
+  }
+
+  .editFormError {
+    font-size: 12px;
+    white-space: nowrap;
   }
 }
 

@@ -1,3 +1,19 @@
 .container {
   padding: 0;
 }
+
+.switchBox {
+  display: flex;
+  gap: 12px;
+  padding-left: 26px;
+
+  .text {
+    font-family: Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: normal;
+    letter-spacing: -0.2343px;
+    color: var(--font-color);
+  }
+}

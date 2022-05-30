@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface IAuthInitialState {
   status: boolean;
@@ -16,12 +16,30 @@ const initialState: IAuthInitialState = {
   expires_in: null,
 };
 
+export interface IRefreshResponse {
+  data?: {
+    access_token: string;
+    refresh_token: string;
+  };
+  error?: {
+    status: number;
+  };
+}
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setLoginData: (state) => {
+    setLoginData: (state, action: PayloadAction<IRefreshResponse>) => {
       state.status = true;
+      localStorage.setItem(
+        'accessToken',
+        action.payload.data?.access_token || '',
+      );
+      localStorage.setItem(
+        'refreshToken',
+        action.payload.data?.refresh_token || '',
+      );
     },
     setLogoutData: (state) => {
       state.status = false;

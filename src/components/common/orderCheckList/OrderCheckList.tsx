@@ -22,6 +22,7 @@ const OrderCheckList: React.FC<IOrderCheckListProps> = ({
           id={`${item.type}${item.id}`}
           key={item.id}
           status={item.status}
+          readOnly
         />
       ))}
     </div>

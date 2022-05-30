@@ -1,11 +1,17 @@
+@import "../../../mixins.scss";
+
+/* stylelint-disable */
+@include fadein;
+/* stylelint-enable */
+
 .container {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  animation: 1s fadein;
   gap: 34px;
-  opacity: 0;
   transition: all 0.5s ease;
 
   .textContainer {

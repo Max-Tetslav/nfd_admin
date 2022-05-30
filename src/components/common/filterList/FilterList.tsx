@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { Button } from 'antd';
-import useAnimate from '@hooks/useAnimate';
 import { INameAndID } from '@models/data';
 import { ETableTypes } from '@models/app';
 import { useAppDispatch, useAppSelector } from '@store/store';
@@ -38,10 +37,8 @@ const FilterList: FC<IFilterListProps> = ({
   const orderFilterStatus = useAppSelector(
     (state) => state.filters.order.filterStatus,
   );
-
-  const [animate, setAnimate] = useState(false);
-
-  useAnimate(setAnimate);
+  const tempCarList = useAppSelector((state) => state.filters.car.tempList);
+  const tempOrderList = useAppSelector((state) => state.filters.order.tempList);
 
   const filters = useMemo(() => {
     switch (type) {
@@ -82,12 +79,6 @@ const FilterList: FC<IFilterListProps> = ({
     }
   }, []);
 
-  const classes = classNames(
-    cl.container,
-    { [cl.loaded]: animate },
-    { [cl.opened]: isFiltersOpened },
-  );
-
   const applyHandler = useCallback(() => {
     switch (type) {
       case ETableTypes.ORDER:
@@ -114,7 +105,7 @@ const FilterList: FC<IFilterListProps> = ({
     }
   }, []);
 
-  const getDisableStatus = useMemo(() => {
+  const getResetDisableStatus = useMemo(() => {
     switch (type) {
       case ETableTypes.ORDER:
         return !orderFilterStatus;
@@ -127,6 +118,23 @@ const FilterList: FC<IFilterListProps> = ({
     }
   }, [carFilterStatus, orderFilterStatus]);
 
+  const getApplyDisableStatus = useMemo(() => {
+    switch (type) {
+      case ETableTypes.ORDER:
+        return (
+          !tempOrderList.city && !tempOrderList.rate && !tempOrderList.status
+        );
+        break;
+      case ETableTypes.CAR:
+        return !tempCarList.category;
+        break;
+
+      // no default
+    }
+  }, [tempCarList, tempOrderList]);
+
+  const classes = classNames(cl.container, { [cl.opened]: isFiltersOpened });
+
   return (
     <>
       <div className={classes}>
@@ -138,7 +146,7 @@ const FilterList: FC<IFilterListProps> = ({
             type="primary"
             danger
             onClick={clearHandler}
-            disabled={getDisableStatus}
+            disabled={getResetDisableStatus}
           >
             Отменить
           </Button>
@@ -147,6 +155,7 @@ const FilterList: FC<IFilterListProps> = ({
             htmlType="button"
             type="primary"
             onClick={applyHandler}
+            disabled={getApplyDisableStatus}
           >
             Применить
           </Button>

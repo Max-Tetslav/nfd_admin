@@ -22,20 +22,18 @@ const UserInfoDropdown: React.FC<IUserInfoDropdownProps> = ({ isOpen }) => {
     navigate('/');
   }, []);
 
-  const classes = classNames(cl.container, { [cl.opened]: isOpen });
+  const classes = classNames(cl.button, cl.danger, { [cl.animate]: isOpen });
 
   return (
-    <div className={classes}>
-      <Button
-        className={cl.button}
-        onClick={logoutHandler}
-        htmlType="button"
-        type="primary"
-        danger
-      >
-        Выйти
-      </Button>
-    </div>
+    <Button
+      className={classes}
+      onClick={logoutHandler}
+      htmlType="button"
+      type="primary"
+      danger
+    >
+      Выйти
+    </Button>
   );
 };
 

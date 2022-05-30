@@ -1,7 +1,5 @@
-import React, { ReactNode, useCallback, useState } from 'react';
-import classNames from 'classnames';
+import React, { ReactNode, useCallback } from 'react';
 import { Pagination } from 'antd';
-import useAnimate from '@hooks/useAnimate';
 import cl from './AdminPagination.module.scss';
 
 interface IAdminPaginationProps {
@@ -66,18 +64,12 @@ const AdminPagination: React.FC<IAdminPaginationProps> = ({
     [],
   );
 
-  const [animate, setAnimate] = useState(false);
-
-  useAnimate(setAnimate);
-
   const paginationHandler = useCallback((pageNum: number) => {
     setPage(pageNum);
   }, []);
 
-  const classes = classNames(cl.container, { [cl.loaded]: animate });
-
   return (
-    <div className={classes}>
+    <div className={cl.container}>
       <Pagination
         className={cl.pagination}
         showSizeChanger={false}

@@ -1,6 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { useNavigate } from 'react-router-dom';
 import nfdApi from '@services/api';
-import { IOrderData } from '@models/data';
+import { IOrderData, TPostOrderData } from '@models/data';
 import { ETableTypes } from '@models/app';
 import { useAppDispatch, useAppSelector } from '@store/store';
 import { updataOrderAllFilters } from '@store/reducers/filters';
@@ -14,27 +21,27 @@ import cl from './TableOrders.module.scss';
 
 const TableOrders: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const stateFilters = useAppSelector((state) => state.filters.order);
-
   const [page, setPage] = useState(1);
+
+  const [putOrder] = nfdApi.usePutOrderMutation();
+  const rateRequest = nfdApi.useGetRateListQuery({ page: 0 });
+  const cityRequest = nfdApi.useGetCityListQuery({ page: 0 });
+  const statusRequest = nfdApi.useGetStatusListQuery({
+    page: 0,
+  });
   const {
     refetch,
     data: orderRequest,
     error,
-    isLoading,
     isFetching,
+    isLoading,
   } = nfdApi.useGetOrdersListQuery({
     page: page - 1,
     city: stateFilters.finalList.city,
     rate: stateFilters.finalList.rate,
     status: stateFilters.finalList.status,
-  });
-
-  const rateRequest = nfdApi.useGetRateListQuery({ page: 0, limit: 20 });
-  const cityRequest = nfdApi.useGetCityListQuery({ page: 0, limit: 20 });
-  const statusRequest = nfdApi.useGetStatusListQuery({
-    page: 0,
-    limit: 20,
   });
 
   const [orders, setOrders] = useState<IOrderData[]>([]);
@@ -47,6 +54,10 @@ const TableOrders: React.FC = () => {
 
     setPage(1);
   }, [stateFilters.filterStatus]);
+
+  useEffect(() => {
+    refetch();
+  }, [page]);
 
   useEffect(() => {
     if (rateRequest.data) {
@@ -85,10 +96,24 @@ const TableOrders: React.FC = () => {
   }, [orderRequest]);
 
   useEffect(() => {
-    if (orderRequest?.data) {
-      setOrders(orderRequest.data);
+    if ((error as { originalStatus: number })?.originalStatus === 401) {
+      refetch();
     }
-  }, [page, stateFilters.finalList]);
+  }, [error]);
+
+  const actionHandler = useCallback(
+    (orderId: string, orderData: TPostOrderData) => {
+      return putOrder({
+        id: orderId,
+        data: orderData,
+      });
+    },
+    [],
+  );
+
+  const editHandler = useCallback((orderId: string) => {
+    navigate(`:${orderId}`);
+  }, []);
 
   const pagination = useMemo(() => {
     return total > 5 ? (
@@ -110,6 +135,18 @@ const TableOrders: React.FC = () => {
       );
     }
 
+    let list: ReactNode;
+
+    if (orderRequest?.data[0]?.id === orders[0]?.id) {
+      list = (
+        <OrdersList
+          orders={orders}
+          actionHandler={actionHandler}
+          editHandler={editHandler}
+        />
+      );
+    }
+
     return (
       <>
         <FilterList
@@ -122,7 +159,7 @@ const TableOrders: React.FC = () => {
           <Spin loading={isFetching} />
         ) : (
           <>
-            <OrdersList orders={orders} />
+            {list}
             {pagination}
           </>
         )}

@@ -1,28 +1,34 @@
-import React, { useState } from 'react';
-import classNames from 'classnames';
-import useAnimate from '@hooks/useAnimate';
-import { IOrderData } from '@models/data';
+import React from 'react';
+import { IOrderData, TPostOrderData } from '@models/data';
 import OrderCard from '@components/common/orderCard/OrderCard';
 import NoData from '@components/common/noData/NoData';
 import cl from './OrdersList.module.scss';
 
 interface IOrderListProps {
   orders: IOrderData[];
+  actionHandler: (id: string, orderData: TPostOrderData) => Promise<unknown>;
+  editHandler: (id: string) => void;
 }
 
-const OrdersList: React.FC<IOrderListProps> = ({ orders }) => {
-  const [animate, setAnimate] = useState(false);
-
-  useAnimate(setAnimate);
-
-  const classes = classNames(cl.container, { [cl.loaded]: animate });
-
+const OrdersList: React.FC<IOrderListProps> = ({
+  orders,
+  actionHandler,
+  editHandler,
+}) => {
   return (
-    <div className={classes}>
-      {orders.length === 0 && <NoData />}
-      {orders.length > 0
-        ? orders.map((item) => <OrderCard order={item} key={item.id} />)
-        : null}
+    <div className={cl.container}>
+      {orders.length > 0 ? (
+        orders.map((item) => (
+          <OrderCard
+            order={item}
+            actionHandler={actionHandler}
+            editHandler={editHandler}
+            key={item.id}
+          />
+        ))
+      ) : (
+        <NoData />
+      )}
     </div>
   );
 };

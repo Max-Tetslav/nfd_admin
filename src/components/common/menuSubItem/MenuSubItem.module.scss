@@ -1,0 +1,25 @@
+.container {
+  width: 0%;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  padding-left: 58px;
+  color: inherit;
+  transition: all 0.5s ease;
+
+  &:hover,
+  &:active,
+  &:focus {
+    a {
+      color: var(--font-color);
+    }
+  }
+}
+
+.active {
+  width: 100%;
+}

@@ -3,24 +3,16 @@
 
   @media screen and (max-width: 1150px) {
     width: 50px;
-    height: 50px;
+    height: 68px;
     padding: 0;
     border: none;
     position: fixed;
-    right: 5%;
-    bottom: 15%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 6px 0;
-    background-color: var(--white);
-    border-radius: 50%;
-    box-shadow:
-      0 1px 75px rgba(90 97 105 / 11%),
-      0 2px 4px rgba(90 97 105 / 12%),
-      0 7.5px 11px rgba(90 97 105 / 10%),
-      0 3.5px 17.5px rgba(165 182 201 / 10%);
+    background-color: transparent;
     z-index: 99;
     cursor: pointer;
 
@@ -111,10 +103,5 @@
         }
       }
     }
-  }
-
-  @media screen and (max-width: 1024px) {
-    right: 16px;
-    bottom: 100px;
   }
 }
